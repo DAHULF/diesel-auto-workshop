@@ -1,0 +1,100 @@
+[
+    {
+        "element": "title",
+        "ru-lang": "Покраска и ремонт автомобилей в Ельце — автосервис Дизель",
+        "en-lang": "Car painting and repair in Yelets — Diesel car service"
+    },
+    {
+        "element": ".header__logo",
+        "attribute": "alt",
+        "ru-lang": "Покраска и ремонт автомобилей в Ельце — автосервис Дизель",
+        "en-lang": "Car painting and repair in Yelets — Diesel car service"
+    },
+    {
+        "element": ".header__title",
+        "ru-lang": "ДИЗЕЛЬ",
+        "en-lang": "DIESEL"
+    },
+    {
+        "element": ".navigation__menu-btn",
+        "attribute": "aria-label",
+        "ru-lang": "Открыть навигационное меню",
+        "en-lang": "Open the navigation menu"
+    },
+    {
+        "element": ".header__lang-switch",
+        "attribute": "aria-label",
+        "ru-lang": "Переключить язык интерфейса",
+        "en-lang": "Switch the interface language"
+    },
+    {
+        "element": ".eyebrow-paragraph",
+        "ru-lang": "Автомастерская · Елец",
+        "en-lang": "Auto repair shop · Yelets"
+    },
+    {
+        "element": ".main-section__title",
+        "ru-lang": "Покраска и ремонт автомобилей",
+        "en-lang": "Car painting and repair"
+    },
+    {
+        "element": ".main-section__description",
+        "ru-lang": "Осмотрим автомобиль, оценим объём работ и согласуем стоимость услуг.",
+        "en-lang": "We will inspect the car, assess the scope of work, and agree on the cost of the services."
+    },
+    {
+        "element": ".main-section__manage-block .primary-btn span",
+        "ru-lang": "Оставить заявку",
+        "en-lang": "Submit application"
+    },
+    {
+        "element": ".main-section__manage-block .secondary-btn span",
+        "ru-lang": "Все способы связи",
+        "en-lang": "All contacts"
+    },
+    {
+        "element": ".services__title",
+        "ru-lang": "Услуги",
+        "en-lang": "Services"
+    },
+    {
+        "element": ".gallery__title",
+        "ru-lang": "Галерея работ",
+        "en-lang": "Gallery of works"
+    },
+    {
+        "element": ".all-photo-btn span",
+        "ru-lang": "Все фотографии",
+        "en-lang": "All photos"
+    },
+    {
+        "element": ".reviews__title",
+        "ru-lang": "Отзывы",
+        "en-lang": "Reviews"
+    },
+    {
+        "element": ".all-reviews-btn span",
+        "ru-lang": "Все отзывы",
+        "en-lang": "All reviews"
+    },
+    {
+        "element": ".contacts__title",
+        "ru-lang": "Как с нами связаться",
+        "en-lang": "How to contact us"
+    },
+    {
+        "element": ".footer__navigation-links h3",
+        "ru-lang": "Разделы",
+        "en-lang": "Sections"
+    },
+    {
+        "element": ".footer__languages-links h3",
+        "ru-lang": "Языки",
+        "en-lang": "Languages"
+    },
+    {
+        "element": ".footer__text",
+        "ru-lang": "Демонстрационный проект. Фотографии и отзывы могут быть вымышленными.",
+        "en-lang": "Demonstration project. The photos and reviews may be fictional."
+    }
+]

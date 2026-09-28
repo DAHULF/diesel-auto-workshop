@@ -1,0 +1,65 @@
+[
+    {
+        "id": 1,
+        "name": {
+            "ru": "Покраска автомобиля",
+            "en": "Car painting"
+        },
+        "priceFrom": {
+            "ru": "От 4000 ₽",
+            "en": "From 4000 ₽"
+        },
+        "icon": "Services/Icons/service-painting-icon.webp",
+        "background": "Services/Backgrounds/service-painting-background.webp",
+        "detailedInfo": {
+            "ru": "Локальная и полная покраска кузовных элементов с подбором цвета. Подготовим поверхность, устраним мелкие дефекты, нанесём грунт, краску и защитное покрытие.",
+            "en": "Local and full painting of body parts with color matching. We prepare the surface, remove minor defects, apply primer, paint and a protective coating."
+        },
+        "detailedPrice": {
+            "ru": "Цена зависит от выбранного оттенка и площади покраски",
+            "en": "The price depends on the selected shade and the area to be painted."
+        }
+    },
+    {
+        "id": 2,
+        "name": {
+            "ru": "Диагностика и ремонт подвески",
+            "en": "Suspension diagnostics and repair"
+        },
+        "priceFrom": {
+            "ru": "От 1500 ₽",
+            "en": "From 1500 ₽"
+        },
+        "icon": "Services/Icons/service-suspension-icon.webp",
+        "background": "Services/Backgrounds/service-suspension-background.webp",
+        "detailedInfo": {
+            "ru": "Проверим состояние амортизаторов, пружин, рычагов, шаровых опор, сайлентблоков и других элементов подвески. После диагностики согласуем необходимые работы и замену изношенных деталей.",
+            "en": "We inspect shock absorbers, springs, control arms, ball joints, bushings and other suspension components. After diagnostics, we agree on the required repairs and replacement of worn parts."
+        },
+        "detailedPrice": {
+            "ru": "Стоимость зависит от конструкции подвески и её качества.",
+            "en": "The cost depends on the design of the suspension and its quality."
+        }
+    },
+    {
+        "id": 3,
+        "name": {
+            "ru": "Техническое обслуживание",
+            "en": "Vehicle maintenance"
+        },
+        "priceFrom": {
+            "ru": "От 2500 ₽",
+            "en": "From 2500 ₽"
+        },
+        "icon": "Services/Icons/service-maintenance-icon.webp",
+        "background": "Services/Backgrounds/service-maintenance-background.webp",
+        "detailedInfo": {
+            "ru": "Проведём плановое техническое обслуживание автомобиля: замену моторного масла и фильтров, проверку технических жидкостей, тормозной системы, ремней и основных узлов.",
+            "en": "We carry out scheduled vehicle maintenance, including engine oil and filter replacement, inspection of technical fluids, the braking system, belts and key components."
+        },
+        "detailedPrice": {
+            "ru": "Цена зависит от модели автомобиля и его характеристик.",
+            "en": "The price depends on the car model and its specifications."
+        }
+    }
+]

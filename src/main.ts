@@ -1,4 +1,24 @@
-import './base.css';
+import { Page } from "./Page/page";
+import { App } from "./app";
+
+import { Navigation } from "./Navigation/navigation";
+import { Services } from "./Services/services";
+
+import { Dialog } from "./dialog";
+
+import { Detailed } from "./detailed";
+
+const navigation = new Navigation();
+
+const services = new Services();
+
+const dialog = new Dialog();
+
+const detailed = new Detailed();
+dialog.addSection(detailed.getElement(), Dialog.SECTION_SHOW_TYPES.slideFromBottom);
+
+const page = new Page(navigation, services, dialog, detailed, Dialog.SECTION_SHOW_TYPES.slideFromRight);
+const app = new App(page);
 
 import whatsappSVG from "./assets/whatsapp.svg?raw"
 import telegramSVG from "./assets/telegram.svg?raw";
