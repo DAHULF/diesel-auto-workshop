@@ -1,0 +1,194 @@
+/* Services block styles */
+/* ===================== */
+.page__services {
+    box-shadow: 0 -3px 12px -3px rgb(0 0 0 / 0.8);
+
+    position: relative;
+    z-index: 100;
+}
+
+.services__container {
+    display: grid;
+    gap: 1.4rem;
+
+    max-width: 1100px;
+    margin: 0 auto;
+
+    @media (min-width: 350px) {
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    }
+}
+
+/* Service cards styles */
+.service-card {
+    --foreground-background: rgb(34 38 34 / 0.85);
+    --foreground-background-hover: rgb(34 38 34 / 0.9);
+    --foreground-background-active: rgb(34 38 34 / 0.95);
+
+    aspect-ratio: 1;
+    cursor: pointer;
+
+    position: relative;
+    overflow: hidden;
+
+    border: 1px solid var(--color-border);
+    border-radius: 0.4rem;
+    padding: 0;
+
+    box-shadow: var(--shadow-card);
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        border-color 0.2s ease;
+
+    @media (pointer: fine) and (hover: hover) {
+        &:hover {
+            outline: none;
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-card-hover);
+        }
+
+        &:hover .service-card__foreground {
+            background: var(--foreground-background-hover);
+        }
+
+        &:hover .service-card__foreground *,
+        &:focus-visible .service-card__foreground * {
+            opacity: 0;
+        }
+
+        &:focus-visible .service-card__detailed-info,
+        &:hover .service-card__detailed-info {
+            transform: none;
+            opacity: 1;
+        }
+    }
+
+    &:focus-visible {
+        outline: none;
+        transform: translateY(-10px);
+        box-shadow: var(--shadow-card-hover);
+    }
+
+    &:focus-visible .service-card__foreground{
+        background: var(--foreground-background-hover);
+    }
+
+    &:active {
+        box-shadow: var(--shadow-card-active);
+        transform: translateY(2px);
+        border: 1px solid var(--color-primary-alternate);
+    }
+
+    &:active .service-card__foreground {
+        background: var(--foreground-background-active);
+    }
+
+    &:active .service-card__foreground * {
+        transform: translateY(4px);
+    }
+
+    &:active .service-card__detailed-info {
+        transform: translateY(15px);
+    }
+}
+
+.service-card__background {
+    --background-image: var(--card-background);
+    
+    background-image: var(--background-image);
+    background-size: cover;
+    background-position: center;
+
+    z-index: 0;
+    position: absolute;
+    inset: 0;
+}
+
+.service-card__foreground {
+    z-index: 10;
+    position: absolute;
+    inset: 0;
+    padding: 1rem;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 0.9rem;
+
+    color: var(--color-primary-light);
+    background: var(--foreground-background);
+}
+
+.service-card__foreground * {
+    transition: 
+        opacity 0.2s ease-in,
+        background 0.2s ease,
+        transform 0.2s ease;
+}
+
+.service-card__icon {
+    width: 4.5rem;
+    aspect-ratio: 1;
+}
+
+.service-card__foreground h3,
+.service-card__foreground p {
+    margin: 0;
+}
+
+.service-card__detailed-info {
+    z-index: 20;
+    position: absolute;
+    inset: 0;
+
+    transform: translateY(60%);
+    opacity: 0;
+
+    color: var(--color-primary-light);
+    text-align: left;
+    line-height: 1.7;
+
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 1rem;
+
+    padding: 1.5rem;
+    overflow: hidden;
+
+    transition:
+        transform 0.6s ease-out,
+        opacity 0.4s ease-out;
+}
+
+.service-card__detailed-info * {
+    margin: 0;
+}
+
+.detailed-info__title {
+    text-align: center;
+}
+
+.detailed-info__text {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+
+    line-clamp: 6;
+    -webkit-line-clamp: 6;
+}
+
+.detailed-info__price {
+    color: var(--color-secondary-light);
+    padding-left: 0.4rem;
+
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+
+    line-clamp: 2;
+    -webkit-line-clamp: 2;
+}

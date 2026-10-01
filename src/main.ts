@@ -3,22 +3,24 @@ import { App } from "./app";
 
 import { Navigation } from "./Navigation/navigation";
 import { Services } from "./Services/services";
+import { Gallery } from "./Gallery/gallery";
 
 import { Dialog } from "./dialog";
 
-import { Detailed } from "./detailed";
+import { Detailed } from "./Detailed/detailed";
+
+const dialog = new Dialog();
 
 const navigation = new Navigation();
 
 const services = new Services();
 
-const dialog = new Dialog();
+const gallery = new Gallery();
 
 const detailed = new Detailed();
-dialog.addSection(detailed.getElement(), Dialog.SECTION_SHOW_TYPES.slideFromBottom);
 
-const page = new Page(navigation, services, dialog, detailed, Dialog.SECTION_SHOW_TYPES.slideFromRight);
-const app = new App(page);
+const page = new Page(dialog);
+const app = new App(page, navigation, dialog, services, detailed, gallery);
 
 import whatsappSVG from "./assets/whatsapp.svg?raw"
 import telegramSVG from "./assets/telegram.svg?raw";

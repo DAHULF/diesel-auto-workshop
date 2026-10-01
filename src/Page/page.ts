@@ -1,4 +1,4 @@
-import { type Language, isLanguage } from "../languages";
+import { type Language, isLanguage, type TextContentItem, translate } from "../languages";
 
 import "./base.css";
 import textContentMap from "./text-content-map.json";
@@ -7,60 +7,37 @@ declare const lucide: {
   createIcons: () => void;
 }
 
-interface Navigation {
-    setSections(sections: HTMLElement[]): void;
-    createNavigation(): HTMLElement;
-    setLang(lang: Language): void;
-    setOnElementSelected(callback: (element: HTMLElement) => void): void;
-}
-
-interface Services<TServicesData> {
-    setLang(lang: Language): void;
-    getElement(): HTMLElement;
-    setOnServiceSelected(callback: (serviceId: number) => void): void;
-    getServiceData(id: number): TServicesData | undefined;
-}
-
-interface Dialog<TShow> {
+interface Dialog {
     getElement(): HTMLDialogElement;
     showSection(section: HTMLElement): void;
-    addSection(section: HTMLElement, showType: TShow): void;
     close(): void;
     isOpen(): boolean;
 }
 
-interface Detailed<TDetailedData> {
-    getElement(): HTMLElement;
-    setLang(lang: Language): void;
-    setServiceData(data: TDetailedData): void;
-}
+type OnLangChangedHook = (lang: Language) => void;
 
-type TextContentItem = {
-    element: string;
-    attribute?: string;
-} & {
-	[Lang in Language as `${Lang}-lang`]: string;
-};
-
-export class Page<TDetailedData, TServicesData extends TDetailedData, TShow> {
+export class Page {
     #textContentMap: TextContentItem[];
     #element: HTMLDivElement;
 
-    #navigation: Navigation;
-    #services: Services<TServicesData>;
+    #headerNav: HTMLElement | null = null;
+    #menuNavSection: HTMLElement | null = null;
+    #footerNav: HTMLElement | null = null;
 
-    #dialog: Dialog<TShow>;
+    #servicesGrid: HTMLElement | null = null;
+    #galleryList: HTMLElement | null = null;
 
-    #detailed: Detailed<TDetailedData>;
+    #dialog: Dialog;
 
     #header: HTMLDivElement;
     #menuBtn: HTMLButtonElement;
     #languageSwitch: HTMLInputElement;
-    #menuShowType: TShow;
+
+    #onLangChanged: OnLangChangedHook | null = null;
 
     #COMPACT_HEADER_DIST = 20;
 
-    constructor(navigation: Navigation, services: Services<TServicesData>, dialog: Dialog<TShow>, detailed: Detailed<TDetailedData>, menuShowType: TShow) {
+    constructor(dialog: Dialog) {
         this.#textContentMap = textContentMap;
 
         const divElement = document.createElement("div");
@@ -131,41 +108,7 @@ export class Page<TDetailedData, TServicesData extends TDetailedData, TShow> {
             <section id="page__gallery" class="page__section page__gallery">
             <h2 class="section-title gallery__title">Галерея работ</h2>
 
-            <div class="page__gallery-list">
-                <button type="button" class="swipe-btn swipe-left-btn" aria-label="Пролистать галерею влево">
-                <i data-lucide="chevron-left" class="swipe-left-icon"></i>
-                </button>
-
-                <button type="button" class="swipe-btn swipe-right-btn" aria-label="Пролистать галерею вправо">
-                <i data-lucide="chevron-right" class="swipe-right-icon"></i>
-                </button>
-                
-                <div class="gallery-list__content scrollable">
-                <button type="button" class="photo-btn">
-                    <img src="main-section-foreground.png" alt="Фото" class="gallery-photo" />
-                </button>
-
-                <button type="button" class="photo-btn">
-                    <img src="main-section-foreground.png" alt="Фото" class="gallery-photo" />
-                </button>
-
-                <button type="button" class="photo-btn">
-                    <img src="main-section-foreground.png" alt="Фото" class="gallery-photo" />
-                </button>
-
-                <button type="button" class="photo-btn">
-                    <img src="main-section-foreground.png" alt="Фото" class="gallery-photo" />
-                </button>
-
-                <button type="button" class="photo-btn">
-                    <img src="main-section-foreground.png" alt="Фото" class="gallery-photo" />
-
-                    <div class="gallery-list__more">
-                    <p>67+</p>
-                    </div>
-                </button>
-                </div>
-            </div>
+            <!-- Place for gallery list -->
 
             <button type="button" class="more-btn all-photo-btn">
                 <span>Все фотографии</span>
@@ -394,36 +337,8 @@ export class Page<TDetailedData, TServicesData extends TDetailedData, TShow> {
 
         this.#element = divElement;
 
-        this.#navigation = navigation;
-        this.#navigation.setSections([
-            ...this.#element.querySelectorAll<HTMLElement>("section"),
-        ]);
-        this.#navigation.setOnElementSelected(this.#sectionSelectionHandler);
-
-        this.#services = services;
-
-        const servicesSection = this.#element.querySelector<HTMLElement>(".page__services");
-        if (servicesSection === null) {
-            throw new Error("Error: Services section not found");
-        }
-
-        this.#services.setOnServiceSelected((serviceId: number): void => {
-            const detailedData = this.#services.getServiceData(serviceId);
-            if (detailedData === undefined) {
-                return;
-            }
-
-            this.#detailed.setServiceData(detailedData);
-            this.#dialog.showSection(detailed.getElement());
-            lucide?.createIcons?.();
-        });
-
-        servicesSection.appendChild(this.#services.getElement());
-
         this.#dialog = dialog;
         this.#element.appendChild(this.#dialog.getElement());
-
-        this.#detailed = detailed;
 
         const headerElement =
             this.#element.querySelector<HTMLDivElement>(".page__header");
@@ -447,10 +362,7 @@ export class Page<TDetailedData, TServicesData extends TDetailedData, TShow> {
         }
         this.#languageSwitch = langSwitchElement;
 
-        this.#menuShowType = menuShowType;
-
         this.#initHeader();
-
         this.#initFooter();
     }
 
@@ -468,23 +380,110 @@ export class Page<TDetailedData, TServicesData extends TDetailedData, TShow> {
 
         document.documentElement.lang = lang;
 
-        this.#textContentMap.forEach((item) => {
-            const element = document.querySelector(item.element);
-            if (element === null) {
-                return;
+        translate(document, this.#textContentMap, lang);
+
+        this.#onLangChanged?.(lang);
+    }
+
+    setOnLangChanged(hook: OnLangChangedHook): void {
+        this.#onLangChanged = hook;
+    }
+
+    getSections(): HTMLElement[] {
+        return [...this.#element.querySelectorAll<HTMLElement>("section")];
+    }
+
+    scrollToSection = (section: HTMLElement) => {
+        if (this.#dialog.isOpen()) {
+            this.#dialog.close();
+        }
+
+        section.scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+        });
+    };
+
+    showDialogSection(section: HTMLElement): void {
+        this.#dialog.showSection(section);
+        lucide?.createIcons?.();
+    }
+
+    setHeaderNavigation(nav: HTMLElement): void {
+        const manageContainer = this.#element.querySelector<HTMLDivElement>(
+            ".header__manage-container",
+        );
+        if (manageContainer === null) {
+            throw new Error("Error: Header manage container not found.");
+        }
+
+        nav.classList.add("navigation__header");
+
+        if (this.#headerNav !== null) {
+            manageContainer.replaceChild(this.#headerNav, nav);
+            this.#headerNav.classList.remove("navigation__header");
+        } else {
+            manageContainer.appendChild(nav);
+        }
+
+        this.#headerNav = nav;
+    }
+
+    setMenuSection(nav: HTMLElement): void {
+        this.#menuNavSection = nav;
+    }
+
+    setFooterNavigation(nav: HTMLElement): void {
+        const footerNavContainer = this.#element.querySelector<HTMLDivElement>(
+            ".footer__navigation-links",
+        );
+        if (footerNavContainer === null) {
+            throw new Error("Error: Footer navigation container not found.");
+        }
+
+        nav.classList.add("navigation__footer");
+
+        if (this.#footerNav !== null) {
+            footerNavContainer.replaceChild(this.#footerNav, nav);
+            this.#footerNav.classList.remove("navigation__footer");
+        } else {
+            footerNavContainer.appendChild(nav);
+        }
+
+        this.#footerNav = nav;
+    }
+
+    setServicesGrid(services: HTMLElement): void {
+        const servicesSection = this.#element.querySelector<HTMLElement>(".page__services");
+        if (servicesSection === null) {
+            throw new Error("Error: Services section not found.");
+        }
+
+        if (this.#servicesGrid !== null) {
+            servicesSection.replaceChild(this.#servicesGrid, services);
+        } else {
+            servicesSection.appendChild(services);
+        }
+
+        this.#servicesGrid = services;
+    }
+
+    setGalleryList(gallery: HTMLElement): void {
+        const gallerySection = this.#element.querySelector<HTMLElement>(".page__gallery");
+        if (gallerySection === null) {
+            throw new Error("Error: Gallery list section not found.");
+        }
+
+        if (this.#galleryList !== null) {
+            this.#galleryList.replaceChild(gallery, this.#galleryList);
+        } else {
+            const allPhotoBtn = this.#element.querySelector<HTMLButtonElement>(".all-photo-btn");
+            if (allPhotoBtn === null) {
+                throw new Error("Error: Show all photo button not found.");
             }
 
-            if (item.attribute === undefined) {
-                element.textContent = item[`${lang}-lang`];
-            } else {
-                element.setAttribute(item.attribute, item[`${lang}-lang`]);
-            }
-        })
-
-        this.#navigation.setLang(lang);
-        this.#services.setLang(lang);
-
-        this.#detailed.setLang(lang);
+            gallerySection.insertBefore(gallery, allPhotoBtn);
+        }
     }
 
     #initHeader(): void {
@@ -500,31 +499,6 @@ export class Page<TDetailedData, TServicesData extends TDetailedData, TShow> {
             this.#languageSwitchHandler,
         );
 
-        const manageContainer = this.#element.querySelector<HTMLDivElement>(
-            ".header__manage-container",
-        );
-        if (manageContainer === null) {
-            throw new Error("Error: Header manage container not found.");
-        }
-
-        const headerNav = this.#navigation.createNavigation();
-        headerNav.classList.add("navigation__header");
-
-        manageContainer.appendChild(headerNav);
-
-        
-        const navMenuSection = document.createElement("section");
-        navMenuSection.classList.add("menu-section");
-        
-        navMenuSection.innerHTML = `<button type="button" class="back-btn">
-            <i data-lucide="chevron-right"></i>
-        </button>`;
-        
-        const menuNav = this.#navigation.createNavigation();
-        menuNav.classList.add("navigation__menu");
-        
-        navMenuSection.appendChild(menuNav);
-        this.#dialog.addSection(navMenuSection, this.#menuShowType);
 
         const menuBtn = this.#element.querySelector<HTMLButtonElement>(".navigation__menu-btn");
         if (menuBtn === null) {
@@ -532,24 +506,13 @@ export class Page<TDetailedData, TServicesData extends TDetailedData, TShow> {
         }
 
         menuBtn.addEventListener("click", () => {
-            this.#dialog.showSection(navMenuSection);
-            lucide?.createIcons?.();
+            if (this.#menuNavSection) {
+                this.showDialogSection(this.#menuNavSection);
+            }
         });
     }
 
     #initFooter(): void {
-        const footerNavContainer = this.#element.querySelector<HTMLDivElement>(
-            ".footer__navigation-links",
-        );
-        if (footerNavContainer === null) {
-            throw new Error("Error: Footer navigation container not found.");
-        }
-
-        const footerNav = this.#navigation.createNavigation();
-        footerNav.classList.add("navigation__footer");
-
-        footerNavContainer.appendChild(footerNav);
-
         const langsFooter = this.#element.querySelector<HTMLElement>(".langs__footer");
         if (langsFooter === null) {
             throw new Error("Error: Footer langs links container not found.");
@@ -593,15 +556,4 @@ export class Page<TDetailedData, TServicesData extends TDetailedData, TShow> {
     #languageSwitchHandler = () => {
         this.setLang(this.#languageSwitch.checked ? "en" : "ru");
     };
-
-    #sectionSelectionHandler = (element: HTMLElement) => {
-        if (this.#dialog.isOpen()) {
-            this.#dialog.close();
-        }
-
-        element.scrollIntoView({
-            behavior: "smooth",
-            block: "start"
-        });
-    }
 }

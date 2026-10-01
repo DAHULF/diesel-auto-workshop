@@ -1,7 +1,9 @@
-import { type Language } from "./languages";
-
 const SHOW_TYPES = ["slideFromRight", "slideFromBottom", "scaling", "instant"] as const;
 type ShowType = typeof SHOW_TYPES[number];
+
+function isShowType(value: string): value is ShowType {
+    return SHOW_TYPES.some((type) => type === value);
+}
 
 type DialogSection = {
     section: HTMLElement;
@@ -25,7 +27,7 @@ export class Dialog {
         ["instant", "none"],
     ]);
 
-    #lang: Language = "ru";
+    #sectionsHistory: HTMLElement[] = [];
 
     constructor() {
         this.#dialog = document.createElement("dialog");
@@ -45,11 +47,11 @@ export class Dialog {
         return this.#dialog;
     }
 
-    setLang(lang: Language): void {
-        this.#lang = lang;
-    }
+    addSection(section: HTMLElement, showType: string = "instant"): void {
+        if (!isShowType(showType)) {
+            throw new Error(`Error: Show type "${showType}" not found.`);
+        }
 
-    addSection(section: HTMLElement, showType: ShowType = "instant"): void {
         const dialogSection: DialogSection = {
             section, showType
         };
@@ -65,10 +67,28 @@ export class Dialog {
     }
 
     showSection(section: HTMLElement): void {
+        if (this.#dialog.classList.contains("page__dialog--opened")) {
+            const currentSection = this.#sectionContainer.querySelector("section");
+            if (currentSection === null) {
+                return;
+            }
+
+            this.#sectionsHistory.push(currentSection);
+            this.#dialog.classList.remove("page__dialog--opened");
+
+            this.#afterContentTransition(() => {
+                this.showSection(section);
+            });
+
+            return;
+        }
+
         const showingSection = this.#sections.find((sec) => sec.section === section);
         if (showingSection === undefined) {
             return;
         }
+
+        this.#sectionContainer.classList.add("dialog__content--preparing");
 
         this.#sectionContainer.replaceChildren(showingSection.section);
 
@@ -77,28 +97,46 @@ export class Dialog {
             this.#SHOW_TRANSFORM_VALUES.get(showingSection.showType) ?? "instant"
         );
 
-        this.#dialog.showModal();
+        if (!this.#dialog.open) {
+            this.#dialog.showModal();
+        }
+
+        void this.#sectionContainer.offsetHeight;
+        this.#sectionContainer.classList.remove("dialog__content--preparing");
+        void this.#sectionContainer.offsetHeight;
 
         requestAnimationFrame(() => {
-            requestAnimationFrame(() => {
-                this.#dialog.classList.add("page__dialog--opened");
-            });
+            this.#dialog.classList.add("page__dialog--opened");
         });
     }
 
     close = (): void => {
         this.#dialog.classList.remove("page__dialog--opened");
 
-        this.#sectionContainer.addEventListener(
-          "transitionend",
-          () => {
-            this.#dialog.close();
-          } ,
-          { once: true }
-        );
+        this.#afterContentTransition(() => {
+            if (this.#sectionsHistory.length === 0) {
+                this.#dialog.close();
+            } else {
+                this.showSection(this.#sectionsHistory.pop()!);
+            }
+        });
     }
 
     isOpen(): boolean {
         return this.#dialog.open;
+    }
+
+    #afterContentTransition(callback: () => void): void {
+        const handler = (event: TransitionEvent): void => {
+            if (event.target !== this.#sectionContainer || event.propertyName !== "transform") {
+                return;
+            }
+
+            this.#sectionContainer.removeEventListener("transitionend", handler);
+
+            callback();
+        }
+
+        this.#sectionContainer.addEventListener("transitionend", handler);
     }
 }

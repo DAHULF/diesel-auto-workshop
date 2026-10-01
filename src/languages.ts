@@ -4,3 +4,29 @@ export type Language = typeof SUPPORTED_LANGUAGES[number];
 export function isLanguage(value: string): value is Language {
     return (SUPPORTED_LANGUAGES as readonly string[]).includes(value);
 }
+
+export type LangItem = {
+	[Lang in Language]: string;
+};
+
+export type TextContentItem = {
+    element: string;
+    attribute?: string;
+} & {
+	[Lang in Language as `${Lang}-lang`]: string;
+};
+
+export function translate(transElement: Element | Document, textContentMap: TextContentItem[], lang: Language): void {
+    textContentMap.forEach((item) => {
+        const element = transElement.querySelector(item.element);
+        if (element === null) {
+            return;
+        }
+
+        if (item.attribute === undefined) {
+            element.textContent = item[`${lang}-lang`];
+        } else {
+            element.setAttribute(item.attribute, item[`${lang}-lang`]);
+        }
+    });
+}

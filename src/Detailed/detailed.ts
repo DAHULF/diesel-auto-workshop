@@ -1,8 +1,7 @@
-import { type Language } from "./languages";
+import "./detailed.css";
+import textContentMap from "./text-content-map.json";
 
-type LangItem = {
-	[Lang in Language]: string;
-};
+import { type Language, type LangItem, type TextContentItem, translate } from "../languages";
 
 type ServiceData = {
     id: number;
@@ -11,15 +10,25 @@ type ServiceData = {
     icon: string;
     background: string;
     detailedInfo: LangItem;
-    detailedPrice: LangItem
+    detailedPrice: LangItem;
 };
 
+interface GalleryList {
+    getElement: () => HTMLElement;
+    filterGalleryData(serviceId?: number): void;
+}
+
 export class Detailed {
+    #textContentMap: TextContentItem[];
     #element: HTMLElement;
+
+    #galleryList: GalleryList | null = null;
 
     #lang: Language = "ru";
 
     constructor() {
+        this.#textContentMap = textContentMap;
+
         this.#element = document.createElement("section");
         this.#element.classList.add("dialog__section-detailed");
 
@@ -48,41 +57,7 @@ export class Detailed {
                 <div class="detailed__gallery">
                     <h2 class="section-title gallery__title">Галерея работ</h2>
 
-                    <div class="page__gallery-list">
-                        <button type="button" class="swipe-btn swipe-left-btn" aria-label="Пролистать галерею влево">
-                        <i data-lucide="chevron-left" class="swipe-left-icon"></i>
-                        </button>
-
-                        <button type="button" class="swipe-btn swipe-right-btn" aria-label="Пролистать галерею вправо">
-                        <i data-lucide="chevron-right" class="swipe-right-icon"></i>
-                        </button>
-                        
-                        <div class="gallery-list__content scrollable">
-                        <button type="button" class="photo-btn">
-                            <img src="main-section-foreground.png" alt="Фото" class="gallery-photo" />
-                        </button>
-
-                        <button type="button" class="photo-btn">
-                            <img src="main-section-foreground.png" alt="Фото" class="gallery-photo" />
-                        </button>
-
-                        <button type="button" class="photo-btn">
-                            <img src="main-section-foreground.png" alt="Фото" class="gallery-photo" />
-                        </button>
-
-                        <button type="button" class="photo-btn">
-                            <img src="main-section-foreground.png" alt="Фото" class="gallery-photo" />
-                        </button>
-
-                        <button type="button" class="photo-btn">
-                            <img src="main-section-foreground.png" alt="Фото" class="gallery-photo" />
-
-                            <div class="gallery-list__more">
-                            <p>67+</p>
-                            </div>
-                        </button>
-                        </div>
-                    </div>
+                    <!-- Place for gallery list -->
 
                     <button type="button" class="more-btn all-photo-btn">
                         <span>Все фотографии</span>
@@ -197,7 +172,9 @@ export class Detailed {
                     </button>
                 </div>
 
-                <button type="button" class="primary-btn submit-app-btn"><span>Оставить заявку</span></button>
+                <button type="button" class="primary-btn submit-app-btn">
+                    <span>Оставить заявку</span>
+                </button>
             </div>
         `;
     }
@@ -208,6 +185,7 @@ export class Detailed {
 
     setLang(lang: Language): void {
         this.#lang = lang;
+        translate(this.#element, this.#textContentMap, this.#lang);
     }
 
     setServiceData(data: ServiceData): void {
@@ -249,5 +227,29 @@ export class Detailed {
         }
 
         price.textContent = `${data.priceFrom[this.#lang]} - ${data.detailedPrice[this.#lang]}`;
+
+        if (this.#galleryList !== null) {
+            this.#galleryList.filterGalleryData(data.id);
+        }
+    }
+
+    setGalleryList(gallery: GalleryList): void {
+        const gallerySection = this.#element.querySelector<HTMLElement>(".detailed__gallery");
+        if (gallerySection === null) {
+            throw new Error("Error: Detailed gallery list section not found.");
+        }
+
+        if (this.#galleryList !== null) {
+            gallerySection.replaceChild(gallery.getElement(), this.#galleryList.getElement());
+        } else {
+            const allPhotoBtn = this.#element.querySelector<HTMLButtonElement>(".all-photo-btn");
+            if (allPhotoBtn === null) {
+                throw new Error("Error: Show all photo button in detailed not found.");
+            }
+
+            gallerySection.insertBefore(gallery.getElement(), allPhotoBtn);
+        }
+
+        this.#galleryList = gallery;
     }
 }

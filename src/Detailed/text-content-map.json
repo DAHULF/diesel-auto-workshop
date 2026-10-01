@@ -1,0 +1,32 @@
+[
+    {
+        "element": ".back-btn span",
+        "ru-lang": "Назад",
+        "en-lang": "Back"
+    },
+    {
+        "element": ".gallery__title",
+        "ru-lang": "Галерея работ",
+        "en-lang": "Gallery of works"
+    },
+    {
+        "element": ".all-photo-btn span",
+        "ru-lang": "Все фотографии",
+        "en-lang": "All photos"
+    },
+    {
+        "element": ".reviews__title",
+        "ru-lang": "Отзывы",
+        "en-lang": "Reviews"
+    },
+    {
+        "element": ".all-reviews-btn span",
+        "ru-lang": "Все отзывы",
+        "en-lang": "All reviews"
+    },
+    {
+        "element": ".submit-app-btn span",
+        "ru-lang": "Оставить заявку",
+        "en-lang": "Submit application"
+    }
+]

@@ -1,9 +1,7 @@
-import { type Language } from "../languages";
-import servicesData from "./services-data.json";
+import "./services.css";
 
-type LangItem = {
-	[Lang in Language]: string;
-};
+import { type Language, type LangItem } from "../languages";
+import servicesData from "./services-data.json";
 
 type ServiceData = {
     id: number;
@@ -12,7 +10,7 @@ type ServiceData = {
     icon: string;
     background: string;
     detailedInfo: LangItem;
-    detailedPrice: LangItem
+    detailedPrice: LangItem;
 };
 
 type ServiceSelectedCallback = (serviceId: number) => void;
@@ -37,6 +35,7 @@ export class Services {
             button.type = "button";
             button.classList.add("service-card");
             button.dataset.id = service.id.toString();
+            button.ariaHasPopup = "dialog";
 
             const background = document.createElement("div");
             background.classList.add("service-card__background");
@@ -85,6 +84,8 @@ export class Services {
             button.appendChild(background);
             button.appendChild(foreground);
             button.appendChild(detailedInfo);
+
+            button.ariaLabelledByElements = [foregH3, foregP];
 
             this.#servicesGrid.appendChild(button);
         });
@@ -147,6 +148,10 @@ export class Services {
 
     setOnServiceSelected(callback: ServiceSelectedCallback): void {
         this.#onServiceSelected = callback;
+    }
+
+    get servicesData() {
+        return this.#servicesData;
     }
 
     #gridClickHandler = (event: Event) => {
