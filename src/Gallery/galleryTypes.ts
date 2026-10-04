@@ -1,8 +1,4 @@
-import { type Language } from "../languages";
-
-type LangItem = {
-    [Lang in Language]: string;
-};
+import { type LangItem } from "../languages";
 
 export type GalleryItem = {
     id: number;

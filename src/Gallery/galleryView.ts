@@ -1,6 +1,5 @@
-import type { Language } from "../languages";
+import { type Language } from "../languages";
 import { type GalleryItem, type GetGalleryDataHook } from "./galleryTypes";
-
 
 export abstract class GalleryView {
     protected element: HTMLElement;

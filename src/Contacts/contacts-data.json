@@ -1,0 +1,46 @@
+[
+    {
+        "type": "other",
+        "contactIcon": "phone",
+        "contactValue": "+7 (000) 000-00 00",
+        "useContactHref": "tel:+70000000000",
+        "useContactAria": {
+            "ru": "Позвонить на номер +70000000000",
+            "en": "Call +70000000000"
+        },
+        "useContactIcon": "phone-outgoing"
+    },
+    {
+        "type": "other",
+        "contactIcon": "mail",
+        "contactValue": "email@some.some",
+        "useContactHref": "mailto:email@some.some",
+        "useContactAria": {
+            "ru": "Отправить электронное письмо на почту email@some.some",
+            "en": "Send an email to email@some.some"
+        },
+        "useContactIcon": "message-square-share"
+    },
+    {
+        "type": "messenger",
+        "contactIcon": "whatsapp",
+        "contactValue": "+7 (000) 000-00 00",
+        "useContactHref": "https://wa.me/70000000000",
+        "useContactAria": {
+            "ru": "Отправить сообщение в Whatsup на номер +70000000000",
+            "en": "Send a WhatsApp message to +70000000000"
+        },
+        "useContactIcon": "message-square-share"
+    },
+    {
+        "type": "messenger",
+        "contactIcon": "telegram",
+        "contactValue": "Username",
+        "useContactHref": "https://t.me/Username",
+        "useContactAria": {
+            "ru": "Написать в Telegram пользователю @Username",
+            "en": "Message user @Username on Telegram"
+        },
+        "useContactIcon": "message-square-share"
+    }
+]

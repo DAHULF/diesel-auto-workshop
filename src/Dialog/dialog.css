@@ -1,0 +1,118 @@
+/* Dalog window styles */
+/* ================== */
+html:has(.page__dialog[open]) {
+    overflow: hidden;
+    scrollbar-gutter: auto;
+}
+
+body:has(.page__dialog[open]) {
+    overflow: hidden;
+}
+
+.page__dialog {
+    --dialog-background: rgb(0 0 0 / 0.45);
+
+    overflow: clip;
+
+    max-width: none;
+    max-height: none;
+    border: none;
+
+    width: 100vw;
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+
+    background-color: var(--dialog-background);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+
+    opacity: 0;
+
+    transition: opacity 0.3s ease-out;
+
+    & .dialog__content {
+        transform: var(--transform-value, none);
+        transition: transform 0.6s ease-out;
+    }
+}
+
+.page__dialog--opened {
+    opacity: 1;
+
+    & .dialog__content {
+        transform: none;
+    }
+}
+
+.dialog__content--preparing {
+    transition: none !important;
+}
+
+.back-btn {
+    color: var(--color-secondary);
+    background: none;
+    border: none;
+    padding: 0.6rem 1rem;
+
+    cursor: pointer;
+
+    font-size: 1.1rem;
+    font-weight: 700;
+
+    & span {
+        display: inline-block;
+        transition:
+                color 0.2s ease,
+                transform 0.2s ease;
+    }
+    
+    &::before {
+        content: "←";
+
+        display: inline-block;
+
+        padding-left: 0.2rem;
+        color: var(--color-secondary);
+
+        transition:
+            color 0.2s ease,
+            transform 0.18s ease;
+    }
+
+    @media (pointer: fine) and (hover: hover) {
+        &:hover span {
+            color: var(--color-secondary-light);
+            transform: translateX(-3px);
+        }
+
+        &:hover::before {
+            color: var(--color-secondary-light);
+            transform: translateX(-5px);
+        }
+    }
+
+    &:focus-visible {
+        outline: none;
+    }
+
+    &:focus-visible span {
+        color: var(--color-secondary-light);
+        transform: translateX(-3px);
+    }
+
+    &:focus-visible::before {
+        color: var(--color-secondary-light);
+        transform: translateX(-5px);
+    }
+
+    &:active span {
+        color: var(--color-secondary-dark);
+        transform: translateX(-5px);
+    }
+
+    &:active::before {
+        color: var(--color-secondary-dark);
+        transform: translateX(-8px);
+    }
+}

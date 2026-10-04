@@ -1,6 +1,6 @@
 import { type Language, isLanguage, type TextContentItem, translate } from "../languages";
 
-import "./base.css";
+import "./page.css";
 import textContentMap from "./text-content-map.json";
 
 declare const lucide: {
@@ -9,7 +9,7 @@ declare const lucide: {
 
 interface Dialog {
     getElement(): HTMLDialogElement;
-    showSection(section: HTMLElement): void;
+    showSection(section: HTMLElement, onShown?: () => void): void;
     close(): void;
     isOpen(): boolean;
 }
@@ -26,6 +26,8 @@ export class Page {
 
     #servicesGrid: HTMLElement | null = null;
     #galleryList: HTMLElement | null = null;
+    #reviewsGrid: HTMLElement | null = null;
+    #contactsBlock: HTMLElement | null = null;
 
     #dialog: Dialog;
 
@@ -106,211 +108,29 @@ export class Page {
             </section>
 
             <section id="page__gallery" class="page__section page__gallery">
-            <h2 class="section-title gallery__title">Галерея работ</h2>
+                <h2 class="section-title gallery__title">Галерея работ</h2>
 
-            <!-- Place for gallery list -->
+                <!-- Place for gallery list -->
 
-            <button type="button" class="more-btn all-photo-btn">
-                <span>Все фотографии</span>
-            </button>
+                <button type="button" class="more-btn all-photo-btn">
+                    <span>Все фотографии</span>
+                </button>
             </section>
 
             <section id="page__reviews" class="page__reviews page__section">
-            <h2 class="section-title reviews__title">Отзывы</h2>
+                <h2 class="section-title reviews__title">Отзывы</h2>
 
-            <div class="page__reviews-grid">
-                <button type="button" class="review-btn">
-                <h4 class="review__name">Данил ДанилДанилДанилДанил</h4>
+                <!-- Place for reviews grid -->
 
-                <div class="review__rating">
-                    <i data-lucide="star" class="review__star review__star--filled"></i>
-                    <i data-lucide="star" class="review__star review__star--filled"></i>
-                    <i data-lucide="star" class="review__star review__star--filled"></i>
-                    <i data-lucide="star" class="review__star review__star--filled"></i>
-                    <i data-lucide="star" class="review__star"></i>
-                </div>
-
-                <p class="review__metadata">
-                    <span class="metadata__service">Покраска автомобиля</span> ·
-                    <span class="metadata__date">16 сентября 2026</span>
-                </p>
-
-                <p class="review__text">
-                    Провели консультацию, помогли с выбором подходящего цвета
-                    расчитали приемлемую цену. Работу сделали быстро и без
-                    изъянов. Всем рекомендую мастера.
-                    Провели консультацию, помогли с выбором подходящего цвета
-                    расчитали приемлемую цену. Работу сделали быстро и без
-                    изъянов. Всем рекомендую мастера.
-                    Провели консультацию, помогли с выбором подходящего цвета
-                    расчитали приемлемую цену. Работу сделали быстро и без
-                    изъянов. Всем рекомендую мастера.
-                </p>
+                <button type="button" class="more-btn all-reviews-btn">
+                    <span>Все отзывы</span>
                 </button>
-            
-                <button type="button" class="review-btn">
-                <h4 class="review__name">Данил</h4>
-
-                <div class="review__rating">
-                    <i data-lucide="star" class="review__star review__star--filled"></i>
-                    <i data-lucide="star" class="review__star review__star--filled"></i>
-                    <i data-lucide="star" class="review__star review__star--filled"></i>
-                    <i data-lucide="star" class="review__star review__star--filled"></i>
-                    <i data-lucide="star" class="review__star"></i>
-                </div>
-
-                <p class="review__metadata">
-                    <span class="metadata__service">Покраска автомобиля</span> ·
-                    <span class="metadata__date">16 сентября 2026</span>
-                </p>
-
-                <p class="review__text">
-                    Провели консультацию, помогли с выбором подходящего цвета
-                    расчитали приемлемую цену. Работу сделали быстро и без
-                    изъянов. Всем рекомендую мастера.
-                </p>
-                </button>
-
-                <button type="button" class="review-btn">
-                <h4 class="review__name">Данил</h4>
-
-                <div class="review__rating">
-                    <i data-lucide="star" class="review__star review__star--filled"></i>
-                    <i data-lucide="star" class="review__star review__star--filled"></i>
-                    <i data-lucide="star" class="review__star review__star--filled"></i>
-                    <i data-lucide="star" class="review__star review__star--filled"></i>
-                    <i data-lucide="star" class="review__star"></i>
-                </div>
-
-                <p class="review__metadata">
-                    <span class="metadata__service">Покраска автомобиля</span> ·
-                    <span class="metadata__date">16 сентября 2026</span>
-                </p>
-
-                <p class="review__text">
-                    Провели консультацию, помогли с выбором подходящего цвета
-                    расчитали приемлемую цену. Работу сделали быстро и без
-                    изъянов. Всем рекомендую мастера.
-                </p>
-                </button>
-
-                <button type="button" class="review-btn">
-                <h4 class="review__name">Данил</h4>
-
-                <div class="review__rating">
-                    <i data-lucide="star" class="review__star review__star--filled"></i>
-                    <i data-lucide="star" class="review__star review__star--filled"></i>
-                    <i data-lucide="star" class="review__star review__star--filled"></i>
-                    <i data-lucide="star" class="review__star review__star--filled"></i>
-                    <i data-lucide="star" class="review__star"></i>
-                </div>
-
-                <p class="review__metadata">
-                    <span class="metadata__service">Покраска автомобиля</span> ·
-                    <span class="metadata__date">16 сентября 2026</span>
-                </p>
-
-                <p class="review__text">
-                    Провели консультацию, помогли с выбором подходящего цвета
-                    расчитали приемлемую цену. Работу сделали быстро и без
-                    изъянов. Всем рекомендую мастера.
-                </p>
-                </button>
-            </div>
-
-            <button type="button" class="more-btn all-reviews-btn">
-                <span>Все отзывы</span>
-            </button>
             </section>
 
             <section id="page__contacts" class="page__contacts page__section">
-            <h2 class="section-title contacts__title">Как с нами связаться</h2>
+                <h2 class="section-title contacts__title">Как с нами связаться</h2>
 
-            <div class="contacts__container">
-                <div class="contacts__map">
-                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d77518.48263723377!2d38.451424822483375!3d52.61566501403438!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x413088481a62816b%3A0xbd76a1228ecacf1f!2z0JXQu9C10YYsINCb0LjQv9C10YbQutCw0Y8g0L7QsdC7Liwg0KDQvtGB0YHQuNGP!5e0!3m2!1sru!2sde!4v1789992194956!5m2!1sru!2sde" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>
-                </div>
-
-                <div class="contacts__content">
-                <div class="contact">
-                    <div class="contact__icon">
-                    <i data-lucide="phone"></i>
-                    </div>
-
-                    <label class="contact__field">
-                    <span>+7 (000) 000-00 00</span>
-                    
-                    <button type="button" class="contact-btn contact-copy-btn" aria-label="Скопировать контакт">
-                        <i data-lucide="copy"></i>
-                    </button>
-                    </label>
-
-                    <a class="contact-btn contact-use-btn" href="tel:+70000000000" aria-label="Использовать контакт">
-                    <i data-lucide="phone-outgoing"></i>
-                    </a>
-                </div>
-
-                <div class="contact">
-                    <div class="contact__icon">
-                    <i data-lucide="mail"></i>
-                    </div>
-
-                    <label class="contact__field">
-                    <span>email@some.some</span>
-                    
-                    <button type="button" class="contact-btn contact-copy-btn" aria-label="Скопировать контакт">
-                        <i data-lucide="copy"></i>
-                    </button>
-                    </label>
-
-                    <a class="contact-btn contact-use-btn" href="mailto:email@some.some" aria-label="Использовать контакт">
-                    <i data-lucide="message-square-share"></i>
-                    </a>
-                </div>
-
-                <div class="contact">
-                    <div class="contact__icon">
-                    <span data-messenger="whatsapp"></span>
-                    </div>
-
-                    <label class="contact__field">
-                    <span>+7 (000) 000-00 00</span>
-                    
-                    <button type="button" class="contact-btn contact-copy-btn" aria-label="Скопировать контакт">
-                        <i data-lucide="copy"></i>
-                    </button>
-                    </label>
-
-                    <a class="contact-btn contact-use-btn" href="https://wa.me/70000000000" aria-label="Использовать контакт">
-                    <i data-lucide="message-square-share"></i>
-                    </a>
-                </div>
-
-                <div class="contact">
-                    <div class="contact__icon">
-                    <span data-messenger="telegram"></span>
-                    </div>
-
-                    <label class="contact__field">
-                    <span>Username</span>
-                    
-                    <button type="button" class="contact-btn contact-copy-btn" aria-label="Скопировать контакт">
-                        <i data-lucide="copy"></i>
-                    </button>
-                    </label>
-
-                    <a class="contact-btn contact-use-btn" href="https://t.me/Username" aria-label="Использовать контакт">
-                    <i data-lucide="message-square-share"></i>
-                    </a>
-                </div>
-
-                <p class="contacts__text">
-                    Уточнение графика и предварительное согласовение времени.
-                </p>
-
-                <button type="button" class="primary-btn submit-app-btn">Оставить заявку</button>
-                </div>
-            </div>
+                <!-- Place for contacts container -->
             </section>
 
             <footer id="page__footer" class="page__footer page__footer">
@@ -383,6 +203,7 @@ export class Page {
         translate(document, this.#textContentMap, lang);
 
         this.#onLangChanged?.(lang);
+        lucide?.createIcons?.();
     }
 
     setOnLangChanged(hook: OnLangChangedHook): void {
@@ -405,8 +226,9 @@ export class Page {
     };
 
     showDialogSection(section: HTMLElement): void {
-        this.#dialog.showSection(section);
-        lucide?.createIcons?.();
+        this.#dialog.showSection(section, () => {
+            lucide?.createIcons?.();
+        });
     }
 
     setHeaderNavigation(nav: HTMLElement): void {
@@ -420,7 +242,7 @@ export class Page {
         nav.classList.add("navigation__header");
 
         if (this.#headerNav !== null) {
-            manageContainer.replaceChild(this.#headerNav, nav);
+            manageContainer.replaceChild(nav, this.#headerNav);
             this.#headerNav.classList.remove("navigation__header");
         } else {
             manageContainer.appendChild(nav);
@@ -444,7 +266,7 @@ export class Page {
         nav.classList.add("navigation__footer");
 
         if (this.#footerNav !== null) {
-            footerNavContainer.replaceChild(this.#footerNav, nav);
+            footerNavContainer.replaceChild(nav, this.#footerNav);
             this.#footerNav.classList.remove("navigation__footer");
         } else {
             footerNavContainer.appendChild(nav);
@@ -460,7 +282,7 @@ export class Page {
         }
 
         if (this.#servicesGrid !== null) {
-            servicesSection.replaceChild(this.#servicesGrid, services);
+            servicesSection.replaceChild(services, this.#servicesGrid);
         } else {
             servicesSection.appendChild(services);
         }
@@ -475,7 +297,7 @@ export class Page {
         }
 
         if (this.#galleryList !== null) {
-            this.#galleryList.replaceChild(gallery, this.#galleryList);
+            gallerySection.replaceChild(gallery, this.#galleryList);
         } else {
             const allPhotoBtn = this.#element.querySelector<HTMLButtonElement>(".all-photo-btn");
             if (allPhotoBtn === null) {
@@ -484,6 +306,44 @@ export class Page {
 
             gallerySection.insertBefore(gallery, allPhotoBtn);
         }
+
+        this.#galleryList = gallery;
+    }
+
+    setReviewsGrid(reviews: HTMLElement): void {
+        const reviewsSection = this.#element.querySelector<HTMLElement>(".page__reviews");
+        if (reviewsSection === null) {
+            throw new Error("Error: Reviews grid section not found.");
+        }
+
+        if (this.#reviewsGrid !== null) {
+            reviewsSection.replaceChild(reviews, this.#reviewsGrid);
+        } else {
+            const allReviewsBtn = this.#element.querySelector<HTMLButtonElement>(".all-reviews-btn");
+            if (allReviewsBtn === null) {
+                throw new Error("Error: Show all reviews button not found.");
+            }
+
+            reviewsSection.insertBefore(reviews, allReviewsBtn);
+        }
+
+        this.#reviewsGrid = reviews;
+    }
+
+    setContactsBlock(contactsBlock: HTMLElement): void {
+        const contactsSection = this.#element.querySelector<HTMLElement>(".page__contacts");
+        if (contactsSection === null) {
+            throw new Error("Error: Contacts section not found.");
+        }
+
+        if (this.#contactsBlock !== null) {
+            contactsSection.replaceChild(contactsBlock, this.#contactsBlock);
+        } else {
+            contactsSection.appendChild(contactsBlock);
+        }
+
+        this.#contactsBlock = contactsBlock;
+        lucide?.createIcons?.();
     }
 
     #initHeader(): void {

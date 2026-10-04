@@ -14,6 +14,8 @@ interface PageInterface {
 
     setServicesGrid(services: HTMLElement): void;
     setGalleryList(gallery: HTMLElement): void;
+    setReviewsGrid(reviews: HTMLElement): void;
+    setContactsBlock(contactsBlock: HTMLElement): void;
 }
 
 interface Navigation {
@@ -35,23 +37,14 @@ interface Services<TServicesData> {
     servicesData: { id: number, name: LangItem }[];
 }
 
-type GalleryList = {
+interface GalleryList {
     getElement: () => HTMLElement;
     filterGalleryData(serviceId?: number): void;
-};
-
-type GallerySection = {
-    getElement: () => HTMLElement;
-    filterGalleryData(serviceId?: number): void;
-    displayMain(photoId: number, serviceId?: number): void;
-    setServicesData(data: { id: number, name: LangItem }[]): void
 }
 
-interface Detailed<TDetailedData> {
-    getElement(): HTMLElement;
-    setLang(lang: Language): void;
-    setServiceData(data: TDetailedData): void;
-    setGalleryList(gallery: GalleryList): void;
+interface GallerySection extends GalleryList {
+    displayMain(photoId: number, serviceId?: number): void;
+    setServicesData(data: { id: number, name: LangItem }[]): void
 }
 
 interface Gallery {
@@ -60,17 +53,53 @@ interface Gallery {
     setLang(lang: Language): void;
 }
 
-export class App<TDetailedData, TServicesData extends TDetailedData> {
+interface ReviewsGrid {
+    getElement(): HTMLElement;
+    filterGalleryData(serviceId?: number): void;
+    displayReview(reviewId: number, serviceId?: number): void
+}
+
+interface ReviewsSection extends ReviewsGrid {
+    setServicesData(data: { id: number, name: LangItem }[]): void
+}
+
+interface Reviews {
+    setGetServiceName(getServiceName: (serviceId: number) => LangItem): void;
+    createReviewsGrid(onReviewClicked: (reviewId: number, serviceId?: number) => void): ReviewsGrid;
+    createReviewsSection(): ReviewsSection;
+    setLang(lang: Language): void;
+}
+
+interface Detailed<TDetailedData> {
+    getElement(): HTMLElement;
+    setLang(lang: Language): void;
+    setServiceData(data: TDetailedData): void;
+    setGalleryList(gallery: GalleryList): void;
+    setReviewsGrid(reviews: ReviewsGrid): void
+}
+
+interface Contacts {
+    getElement(): HTMLElement;
+    setLang(lang: Language): void;
+}
+
+export class App<TDetailedData, TServicesData extends TDetailedData & { name: LangItem }> {
     #page: PageInterface;
     
     #navigation: Navigation;
     #dialog: Dialog;
     #services: Services<TServicesData>;
     #detailed: Detailed<TDetailedData>;
+
     #gallery: Gallery;
     #gallerySection: GallerySection;
 
-    constructor(page: PageInterface, navigation: Navigation, dialog: Dialog, services: Services<TServicesData>, detailed: Detailed<TDetailedData>, gallery: Gallery) {
+    #reviews: Reviews;
+    #reviewsSection: ReviewsSection;
+
+    #contacts: Contacts;
+
+    constructor(page: PageInterface, navigation: Navigation, dialog: Dialog, services: Services<TServicesData>, detailed: Detailed<TDetailedData>, gallery: Gallery, reviews: Reviews, contacts: Contacts) {
         // Setup main page
         // ===============
         this.#page = page;
@@ -135,11 +164,28 @@ export class App<TDetailedData, TServicesData extends TDetailedData> {
         this.#gallery = gallery;
 
         this.#page.setGalleryList(this.#gallery.createGalleryListView(this.#onPhotoClicked).getElement());
-        this.#detailed.setGalleryList(gallery.createGalleryListView(this.#onPhotoClicked));
+        this.#detailed.setGalleryList(this.#gallery.createGalleryListView(this.#onPhotoClicked));
 
         this.#gallerySection = this.#gallery.createGallerySectionView();
         this.#gallerySection.setServicesData(this.#services.servicesData);
         this.#dialog.addSection(this.#gallerySection.getElement(), "scaling");
+
+        // Setup reviews
+        // =============
+        this.#reviews = reviews;
+        this.#reviews.setGetServiceName(this.#getServiceName);
+
+        this.#page.setReviewsGrid(this.#reviews.createReviewsGrid(this.#onReviewClicked).getElement());
+        this.#detailed.setReviewsGrid(this.#reviews.createReviewsGrid(this.#onReviewClicked));
+
+        this.#reviewsSection = this.#reviews.createReviewsSection();
+        this.#reviewsSection.setServicesData(this.#services.servicesData);
+        this.#dialog.addSection(this.#reviewsSection.getElement(), "slideFromBottom");
+
+        // Setup contacts
+        // ==============
+        this.#contacts = contacts;
+        this.#page.setContactsBlock(this.#contacts.getElement());
     }
 
     #onLangChanged = (lang: Language) => {
@@ -147,10 +193,25 @@ export class App<TDetailedData, TServicesData extends TDetailedData> {
         this.#services.setLang(lang);
         this.#detailed.setLang(lang);
         this.#gallery.setLang(lang);
+        this.#reviews.setLang(lang);
+        this.#contacts.setLang(lang);
     };
 
     #onPhotoClicked = (photoId: number, serviceId?: number) => {
         this.#gallerySection.displayMain(photoId, serviceId);
         this.#page.showDialogSection(this.#gallerySection.getElement());
+    }
+
+    #getServiceName = (serviceId: number) => {
+        return this.#services.getServiceData(serviceId)?.name 
+            ?? {
+                "ru": "Неизвестная услуга",
+                "en": "Unknown serivce"
+            };
+    }
+
+    #onReviewClicked = (reviewId: number, serviceId?: number) => {
+        this.#reviewsSection.displayReview(reviewId, serviceId);
+        this.#page.showDialogSection(this.#reviewsSection.getElement());
     }
 }

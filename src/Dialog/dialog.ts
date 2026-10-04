@@ -1,3 +1,5 @@
+import "./dialog.css";
+
 const SHOW_TYPES = ["slideFromRight", "slideFromBottom", "scaling", "instant"] as const;
 type ShowType = typeof SHOW_TYPES[number];
 
@@ -66,7 +68,7 @@ export class Dialog {
         backBtn.addEventListener("click", this.close);
     }
 
-    showSection(section: HTMLElement): void {
+    showSection(section: HTMLElement, onShown?: () => void): void {
         if (this.#dialog.classList.contains("page__dialog--opened")) {
             const currentSection = this.#sectionContainer.querySelector("section");
             if (currentSection === null) {
@@ -77,7 +79,7 @@ export class Dialog {
             this.#dialog.classList.remove("page__dialog--opened");
 
             this.#afterContentTransition(() => {
-                this.showSection(section);
+                this.showSection(section, onShown);
             });
 
             return;
@@ -107,6 +109,7 @@ export class Dialog {
 
         requestAnimationFrame(() => {
             this.#dialog.classList.add("page__dialog--opened");
+            onShown?.();
         });
     }
 

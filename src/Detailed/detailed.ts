@@ -18,11 +18,17 @@ interface GalleryList {
     filterGalleryData(serviceId?: number): void;
 }
 
+interface ReviewsGrid {
+    getElement: () => HTMLElement;
+    filterGalleryData(serviceId?: number): void;
+}
+
 export class Detailed {
     #textContentMap: TextContentItem[];
     #element: HTMLElement;
 
     #galleryList: GalleryList | null = null;
+    #reviewsGrid: ReviewsGrid | null = null;
 
     #lang: Language = "ru";
 
@@ -67,105 +73,7 @@ export class Detailed {
                 <div class="detailed__reviews">
                     <h2 class="section-title reviews__title">Отзывы</h2>
 
-                    <div class="page__reviews-grid">
-                        <button type="button" class="review-btn">
-                        <h4 class="review__name">Данил ДанилДанилДанилДанил</h4>
-
-                        <div class="review__rating">
-                            <i data-lucide="star" class="review__star review__star--filled"></i>
-                            <i data-lucide="star" class="review__star review__star--filled"></i>
-                            <i data-lucide="star" class="review__star review__star--filled"></i>
-                            <i data-lucide="star" class="review__star review__star--filled"></i>
-                            <i data-lucide="star" class="review__star"></i>
-                        </div>
-
-                        <p class="review__metadata">
-                            <span class="metadata__service">Покраска автомобиля</span> ·
-                            <span class="metadata__date">16 сентября 2026</span>
-                        </p>
-
-                        <p class="review__text">
-                            Провели консультацию, помогли с выбором подходящего цвета
-                            расчитали приемлемую цену. Работу сделали быстро и без
-                            изъянов. Всем рекомендую мастера.
-                            Провели консультацию, помогли с выбором подходящего цвета
-                            расчитали приемлемую цену. Работу сделали быстро и без
-                            изъянов. Всем рекомендую мастера.
-                            Провели консультацию, помогли с выбором подходящего цвета
-                            расчитали приемлемую цену. Работу сделали быстро и без
-                            изъянов. Всем рекомендую мастера.
-                        </p>
-                        </button>
-                    
-                        <button type="button" class="review-btn">
-                        <h4 class="review__name">Данил</h4>
-
-                        <div class="review__rating">
-                            <i data-lucide="star" class="review__star review__star--filled"></i>
-                            <i data-lucide="star" class="review__star review__star--filled"></i>
-                            <i data-lucide="star" class="review__star review__star--filled"></i>
-                            <i data-lucide="star" class="review__star review__star--filled"></i>
-                            <i data-lucide="star" class="review__star"></i>
-                        </div>
-
-                        <p class="review__metadata">
-                            <span class="metadata__service">Покраска автомобиля</span> ·
-                            <span class="metadata__date">16 сентября 2026</span>
-                        </p>
-
-                        <p class="review__text">
-                            Провели консультацию, помогли с выбором подходящего цвета
-                            расчитали приемлемую цену. Работу сделали быстро и без
-                            изъянов. Всем рекомендую мастера.
-                        </p>
-                        </button>
-
-                        <button type="button" class="review-btn">
-                        <h4 class="review__name">Данил</h4>
-
-                        <div class="review__rating">
-                            <i data-lucide="star" class="review__star review__star--filled"></i>
-                            <i data-lucide="star" class="review__star review__star--filled"></i>
-                            <i data-lucide="star" class="review__star review__star--filled"></i>
-                            <i data-lucide="star" class="review__star review__star--filled"></i>
-                            <i data-lucide="star" class="review__star"></i>
-                        </div>
-
-                        <p class="review__metadata">
-                            <span class="metadata__service">Покраска автомобиля</span> ·
-                            <span class="metadata__date">16 сентября 2026</span>
-                        </p>
-
-                        <p class="review__text">
-                            Провели консультацию, помогли с выбором подходящего цвета
-                            расчитали приемлемую цену. Работу сделали быстро и без
-                            изъянов. Всем рекомендую мастера.
-                        </p>
-                        </button>
-
-                        <button type="button" class="review-btn">
-                        <h4 class="review__name">Данил</h4>
-
-                        <div class="review__rating">
-                            <i data-lucide="star" class="review__star review__star--filled"></i>
-                            <i data-lucide="star" class="review__star review__star--filled"></i>
-                            <i data-lucide="star" class="review__star review__star--filled"></i>
-                            <i data-lucide="star" class="review__star review__star--filled"></i>
-                            <i data-lucide="star" class="review__star"></i>
-                        </div>
-
-                        <p class="review__metadata">
-                            <span class="metadata__service">Покраска автомобиля</span> ·
-                            <span class="metadata__date">16 сентября 2026</span>
-                        </p>
-
-                        <p class="review__text">
-                            Провели консультацию, помогли с выбором подходящего цвета
-                            расчитали приемлемую цену. Работу сделали быстро и без
-                            изъянов. Всем рекомендую мастера.
-                        </p>
-                        </button>
-                    </div>
+                    <!-- Place for reviews grid -->
 
                     <button type="button" class="more-btn all-reviews-btn">
                         <span>Все отзывы</span>
@@ -231,6 +139,10 @@ export class Detailed {
         if (this.#galleryList !== null) {
             this.#galleryList.filterGalleryData(data.id);
         }
+
+        if (this.#reviewsGrid !== null) {
+            this.#reviewsGrid.filterGalleryData(data.id);
+        }
     }
 
     setGalleryList(gallery: GalleryList): void {
@@ -251,5 +163,25 @@ export class Detailed {
         }
 
         this.#galleryList = gallery;
+    }
+
+    setReviewsGrid(reviews: ReviewsGrid): void {
+        const reviewsSection = this.#element.querySelector<HTMLElement>(".detailed__reviews");
+        if (reviewsSection === null) {
+            throw new Error("Error: Reviews grid section not found.");
+        }
+
+        if (this.#reviewsGrid !== null) {
+            reviewsSection.replaceChild(reviews.getElement(), this.#reviewsGrid.getElement());
+        } else {
+            const allReviewsBtn = this.#element.querySelector<HTMLButtonElement>(".all-reviews-btn");
+            if (allReviewsBtn === null) {
+                throw new Error("Error: Show all reviews button not found.");
+            }
+
+            reviewsSection.insertBefore(reviews.getElement(), allReviewsBtn);
+        }
+
+        this.#reviewsGrid = reviews;
     }
 }
