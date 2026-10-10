@@ -119,3 +119,7 @@ The application architecture, TypeScript code, HTML structure, and CSS were writ
 ## Status
 
 The project is complete as a TypeScript portfolio and learning project. A real production version would require a backend, genuine business data, server-side validation, real request processing, and additional deployment and SEO work.
+
+## Live Demo
+
+[View the live project](https://dahulf.github.io/diesel-auto-workshop/)
