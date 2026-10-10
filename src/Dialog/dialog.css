@@ -1,12 +1,12 @@
 /* Dalog window styles */
 /* ================== */
-html:has(.page__dialog[open]) {
+html.dialog-open,
+body.dialog-open {
     overflow: hidden;
-    scrollbar-gutter: auto;
 }
 
-body:has(.page__dialog[open]) {
-    overflow: hidden;
+html.dialog-open body {
+    padding-right: var(--scrollbar-width, 0px);
 }
 
 .page__dialog {
@@ -18,14 +18,14 @@ body:has(.page__dialog[open]) {
     max-height: none;
     border: none;
 
-    width: 100vw;
-    height: 100vh;
+    width: 100%;
+    height: 100dvh;
     margin: 0;
     padding: 0;
 
     background-color: var(--dialog-background);
-    backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
 
     opacity: 0;
 
@@ -66,7 +66,7 @@ body:has(.page__dialog[open]) {
                 color 0.2s ease,
                 transform 0.2s ease;
     }
-    
+
     &::before {
         content: "←";
 

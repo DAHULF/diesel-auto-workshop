@@ -1,6 +1,6 @@
 /* Reviews grid styles */
 /* =================== */
-.reviews-grid {    
+.reviews-grid {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
@@ -33,7 +33,7 @@
 
     padding: 1.4rem;
 
-    box-shadow: var(--shadow-card);  
+    box-shadow: var(--shadow-card);
 }
 
 .page__reviews-grid .review-card {
@@ -139,7 +139,7 @@
     margin-left: 0.7rem;
     height: 100%;
     align-self: center;
-    
+
     overflow: hidden;
     display: -webkit-box;
     -webkit-box-orient: vertical;
@@ -164,11 +164,57 @@
     gap: 2rem;
 }
 
-.gallery__manage {
+.reviews__manage {
     width: 100%;
+}
+
+.reviews__select-service {
+    --select-hover: rgb(250 250 250);
+
+    width: 100%;
+    color: var(--color-secondary-light);
+    background-color: var(--color-primary-alternate);
+    border: 1px solid var(--color-secondary);
+    border-radius: 0.2rem;
+    padding: 0.3rem 0.4rem;
+
+    cursor: pointer;
+
+    transition:
+        background-color 0.2s ease,
+        border-color 0.2s ease;
+
+    @media (pointer: fine) and (hover: hover) {
+        &:hover {
+            border-color: var(--select-hover);
+            outline: none;
+        }
+    }
+
+    &:focus {
+        border-color: var(--select-hover);
+        outline: none;
+    }
+
+    &:active {
+        background-color: var(--color-primary-alternate-pale);
+    }
+}
+
+@media(min-width: 400px) {
+    .reviews__manage {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .reviews__select-service {
+        max-width: 40ch;
+        width: auto;
+    }
 }
 
 .dialog__reviews-grid {
     overflow-y: auto;
     padding: 1rem;
+    padding-bottom: 5rem;
 }

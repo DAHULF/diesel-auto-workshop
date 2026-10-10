@@ -1,11 +1,8 @@
 import { type Language, isLanguage, type TextContentItem, translate } from "../languages";
+import { renderIcons } from "../icons";
 
 import "./page.css";
 import textContentMap from "./text-content-map.json";
-
-declare const lucide: {
-  createIcons: () => void;
-}
 
 interface Dialog {
     getElement(): HTMLDialogElement;
@@ -37,6 +34,10 @@ export class Page {
 
     #onLangChanged: OnLangChangedHook | null = null;
 
+    #onSubmitApplication: (() => void) | null = null;
+    #onShowAllPhoto: (() => void) | null = null;
+    #onShowAllReviews: (() => void) | null = null;
+
     #COMPACT_HEADER_DIST = 20;
 
     constructor(dialog: Dialog) {
@@ -47,7 +48,7 @@ export class Page {
         divElement.innerHTML = `
             <header id="page__header" class="page__header">
                 <div class="header__title-container">
-                    <img src="logo.png" alt="Логотип автомастерской" class="header__logo" />
+                    <img src="logo.webp" alt="Логотип автомастерской" class="header__logo" />
                     <h1 class="header__title">ДИЗЕЛЬ</h1>
                 </div>
 
@@ -134,25 +135,25 @@ export class Page {
             </section>
 
             <footer id="page__footer" class="page__footer page__footer">
-            <div class="footer__info">
-                <div class="footer__nav-container footer__navigation-links">  
-                    <h3>Разделы</h3>
-   
-                    <!-- Place for footer navigation -->
+                <div class="footer__info">
+                    <div class="footer__nav-container footer__navigation-links">
+                        <h3>Разделы</h3>
+
+                        <!-- Place for footer navigation -->
+                    </div>
+
+                    <div class="footer__nav-container footer__languages-links">
+                        <h3>Языки</h3>
+
+                        <nav class="langs__footer">
+                            <a href="#" class="lang-link" data-lang="ru">Русский</a>
+                            <a href="#" class="lang-link" data-lang="en">English</a>
+                        </nav>
                 </div>
 
-                <div class="footer__nav-container footer__languages-links">
-                    <h3>Языки</h3>
-        
-                    <nav class="langs__footer">
-                        <a href="#" class="lang-link" data-lang="ru">Русский</a>
-                        <a href="#" class="lang-link" data-lang="en">English</a>
-                    </nav>
-            </div>
-
-            <p class="footer__text">
-                Демонстрационный проект. Фотографии и отзывы могут быть вымышленными.
-            </p>
+                <p class="footer__text">
+                    Демонстрационный проект. Фотографии и отзывы могут быть вымышленными.
+                </p>
             </footer>`;
 
         this.#element = divElement;
@@ -183,6 +184,7 @@ export class Page {
         this.#languageSwitch = langSwitchElement;
 
         this.#initHeader();
+        this.#initButtons();
         this.#initFooter();
     }
 
@@ -203,11 +205,23 @@ export class Page {
         translate(document, this.#textContentMap, lang);
 
         this.#onLangChanged?.(lang);
-        lucide?.createIcons?.();
+        renderIcons();
     }
 
     setOnLangChanged(hook: OnLangChangedHook): void {
         this.#onLangChanged = hook;
+    }
+
+    setOnSubmitApplication(hook: () => void): void {
+        this.#onSubmitApplication = hook;
+    }
+
+    setOnShowAllPhoto(hook: () => void): void {
+        this.#onShowAllPhoto = hook;
+    }
+
+    setOnShowAllReviews(hook: () => void): void {
+        this.#onShowAllReviews = hook;
     }
 
     getSections(): HTMLElement[] {
@@ -227,7 +241,7 @@ export class Page {
 
     showDialogSection(section: HTMLElement): void {
         this.#dialog.showSection(section, () => {
-            lucide?.createIcons?.();
+            renderIcons();
         });
     }
 
@@ -319,7 +333,7 @@ export class Page {
         if (this.#reviewsGrid !== null) {
             reviewsSection.replaceChild(reviews, this.#reviewsGrid);
         } else {
-            const allReviewsBtn = this.#element.querySelector<HTMLButtonElement>(".all-reviews-btn");
+            const allReviewsBtn = this.#element.querySelector<HTMLDivElement>(".all-reviews-btn");
             if (allReviewsBtn === null) {
                 throw new Error("Error: Show all reviews button not found.");
             }
@@ -343,7 +357,7 @@ export class Page {
         }
 
         this.#contactsBlock = contactsBlock;
-        lucide?.createIcons?.();
+        renderIcons();
     }
 
     #initHeader(): void {
@@ -369,6 +383,61 @@ export class Page {
             if (this.#menuNavSection) {
                 this.showDialogSection(this.#menuNavSection);
             }
+        });
+    }
+
+    #initButtons(): void {
+        const submitAppBtn = this.#element.querySelector<HTMLButtonElement>(".submit-app-btn");
+        if (submitAppBtn === null) {
+            throw new Error("Error: Main section submit app button not found.");
+        }
+
+        submitAppBtn.addEventListener("click", () => {
+            if (this.#onSubmitApplication === null) {
+                throw new Error(`Error: set "onSubmitApplication()" hook first.`);
+            }
+
+            this.#onSubmitApplication?.();
+         });
+
+        const contactsBtn = this.#element.querySelector<HTMLButtonElement>(".contacts-btn");
+        if (contactsBtn === null) {
+            throw new Error("Error: Main section contacts button not found.");
+        }
+
+        contactsBtn.addEventListener("click", () => {
+            const contactsSection = this.#element.querySelector<HTMLElement>(".page__contacts");
+            if (contactsSection === null) {
+                throw new Error("Error: Contacts section not found.");
+            }
+
+            this.scrollToSection(contactsSection);
+        });
+
+        const allPhotoBtn = this.#element.querySelector<HTMLButtonElement>(".all-photo-btn");
+        if (allPhotoBtn === null) {
+            throw new Error("Error: Show all photo button not found.");
+        }
+
+        allPhotoBtn.addEventListener("click", () => {
+            if (this.#onSubmitApplication === null) {
+                throw new Error(`Error: set "onShowAllPhoto()" hook first.`);
+            }
+
+            this.#onShowAllPhoto?.();
+        });
+
+        const allReviewsBtn = this.#element.querySelector<HTMLButtonElement>(".all-reviews-btn");
+        if (allReviewsBtn === null) {
+            throw new Error("Error: All reviews button not found.");
+        }
+
+        allReviewsBtn.addEventListener("click", () => {
+            if (this.#onSubmitApplication === null) {
+                throw new Error(`Error: set "onShowAllReviews()" hook first.`);
+            }
+
+            this.#onShowAllReviews?.();
         });
     }
 

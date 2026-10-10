@@ -9,6 +9,15 @@ export type LangItem = {
 	[Lang in Language]: string;
 };
 
+export function isLangItem(value: unknown): value is LangItem {
+    const isLangItem =
+        typeof value === "object"
+        && value !== null
+        && Object.keys(value).every((key) => SUPPORTED_LANGUAGES.some((lang) => lang === key));
+
+    return isLangItem;
+}
+
 export type TextContentItem = {
     element: string;
     attribute?: string;

@@ -41,12 +41,12 @@ export class Services {
             background.classList.add("service-card__background");
             background.style.setProperty(
                 "--card-background",
-                `url("${service.background}")`
+                `url("${import.meta.env.BASE_URL}${service.background}")`
             );
 
             const foreground = document.createElement("div");
             foreground.classList.add("service-card__foreground");
-            
+
             const foregImg = document.createElement("img");
             foregImg.classList.add("service-card__icon");
             foregImg.src = service.icon;
@@ -93,7 +93,7 @@ export class Services {
 
     setLang(lang: Language): void {
         this.#lang = lang;
-        
+
         const serviceCards = this.#servicesGrid.querySelectorAll<HTMLButtonElement>(".service-card");
         serviceCards.forEach((serviceCard) => {
             const id = serviceCard.dataset.id;
@@ -130,7 +130,7 @@ export class Services {
             if (detailedText !== null) {
                 detailedText.textContent = serviceData.detailedInfo[this.#lang];
             }
-            
+
             const detailedPrice = serviceCard.querySelector<HTMLParagraphElement>(".detailed-info__price");
             if (detailedPrice !== null) {
                 detailedPrice.textContent = serviceData.detailedPrice[this.#lang];
@@ -144,6 +144,10 @@ export class Services {
 
     getServiceData(id: number): ServiceData | undefined {
         return this.#servicesData.find((data) => data.id === id);
+    }
+
+    getServiceName(id: number): LangItem | undefined {
+        return this.#servicesData.find((data) => data.id === id)?.name;
     }
 
     setOnServiceSelected(callback: ServiceSelectedCallback): void {

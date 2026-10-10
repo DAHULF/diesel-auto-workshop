@@ -2,13 +2,10 @@ import "./contacts.css";
 import contactsData from "./contacts-data.json";
 
 import { type Language, type LangItem } from "../languages";
+import { renderIcons } from "../icons";
 
 import whatsappSVG from "../assets/whatsapp.svg?raw"
 import telegramSVG from "../assets/telegram.svg?raw";
-
-declare const lucide: {
-  createIcons: () => void;
-}
 
 const CONTACT_TYPES = ["messenger", "other"] as const;
 type ContactType = typeof CONTACT_TYPES[number];
@@ -55,6 +52,8 @@ export class Contacts {
     #COPY_AWAIT_TIMEOUT = 5000;
     #STATUS_RESTORE_TIMEOUT = 2000;
 
+    #onSubmitApplication: (() => void) | null = null;
+
     constructor() {
         contactsData.forEach((contact) => {
             if (isContactType(contact.type)) {
@@ -80,18 +79,26 @@ export class Contacts {
 
         this.#contactsText = document.createElement("p");
         this.#contactsText.classList.add("contacts__text");
-        this.#contactsText.textContent = this.#lang === "ru" 
+        this.#contactsText.textContent = this.#lang === "ru"
             ? "Уточнение графика и предварительное согласовение времени."
             : "Refining the schedule and tentatively agreeing on the time.";
 
         this.#submitAppBtn = document.createElement("button");
         this.#submitAppBtn.type = "button";
         this.#submitAppBtn.classList.add("primary-btn", "submit-app-btn");
-        this.#submitAppBtn.textContent = this.#lang === "ru" 
-            ? "Оставить заявку" 
+        this.#submitAppBtn.textContent = this.#lang === "ru"
+            ? "Оставить заявку"
             : "Submit application";
 
         this.#contactsContent.addEventListener("click", this.#clickHandler);
+
+        this.#submitAppBtn.addEventListener("click", () => {
+            if (this.#onSubmitApplication === null) {
+                throw new Error(`Error: Set "onSubmitApplication()" hook first.`);
+            }
+
+            this.#onSubmitApplication();
+        });
 
         this.renderContacts();
     }
@@ -174,15 +181,19 @@ export class Contacts {
     setLang(lang: Language): void {
         this.#lang = lang;
 
-        this.#contactsText.textContent = this.#lang === "ru" 
+        this.#contactsText.textContent = this.#lang === "ru"
             ? "Уточнение графика и предварительное согласовение времени."
             : "Refining the schedule and tentatively agreeing on the time.";
 
-        this.#submitAppBtn.textContent = this.#lang === "ru" 
-            ? "Оставить заявку" 
+        this.#submitAppBtn.textContent = this.#lang === "ru"
+            ? "Оставить заявку"
             : "Submit application";
 
         this.renderContacts();
+    }
+
+    setOnSubmitApplication(hook: () => void): void {
+        this.#onSubmitApplication = hook;
     }
 
     async copyContact(contactField: HTMLElement): Promise<boolean> {
@@ -209,7 +220,7 @@ export class Contacts {
         loadingContainer.innerHTML = `<i data-lucide="loader-circle"></i>`;
 
         contactField.replaceChild(loadingContainer, copyBtn);
-        lucide?.createIcons?.();
+        renderIcons();
 
         let success = false;
         let statusContainer = null;
@@ -221,7 +232,6 @@ export class Contacts {
                 }),
                 new Promise<void>((_res, rej) => {
                     setTimeout(() => {
-                        console.log("rejected");
                         rej();
                     }, this.#COPY_AWAIT_TIMEOUT);
                 })
@@ -233,7 +243,7 @@ export class Contacts {
             statusContainer = document.createElement("div");
             statusContainer.classList.add("contact-copy-status", "copy-success");
             statusContainer.innerHTML = `<i data-lucide="check"></i>`;
-            
+
             success = true;
         } catch (error) {
             statusContainer = document.createElement("div");
@@ -242,11 +252,11 @@ export class Contacts {
         }
 
         contactField.replaceChild(statusContainer, loadingContainer);
-        lucide?.createIcons?.();
+        renderIcons();
 
         setTimeout(() => {
             contactField.replaceChild(copyBtn, statusContainer);
-            lucide?.createIcons?.();
+            renderIcons();
         }, this.#STATUS_RESTORE_TIMEOUT);
 
         this.#isCopying = false;

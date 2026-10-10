@@ -73,6 +73,11 @@
         "en-lang": "Reviews"
     },
     {
+        "element": ".submit-review-btn span",
+        "ru-lang": "Оставить отзыв",
+        "en-lang": "Submit review"
+    },
+    {
         "element": ".all-reviews-btn span",
         "ru-lang": "Все отзывы",
         "en-lang": "All reviews"

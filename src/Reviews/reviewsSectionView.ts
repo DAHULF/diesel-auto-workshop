@@ -22,21 +22,21 @@ export class ReviewsSectionView implements ReviewsView {
         const element = document.createElement("section");
         element.classList.add("dialog__section-reviews");
         element.innerHTML = `
-            <div class="gallery__manage">
+            <div class="reviews__manage">
                 <button type="button" class="back-btn">
                     <span>Назад</span>
                 </button>
 
-                <select class="gallery__select-service" name="serviceType"></select>
+                <select class="reviews__select-service" name="serviceType"></select>
             </div>
         `;
         this.#element = element;
-        
+
         this.#reviewsGrid = new ReviewsGridView(getReviewsData, getServiceName, "div");
         this.#reviewsGrid.getElement().classList.add("dialog__reviews-grid", "scrollable");
         this.#element.appendChild(this.#reviewsGrid.getElement());
 
-        const serviceSelect = element.querySelector<HTMLSelectElement>(".gallery__select-service");
+        const serviceSelect = element.querySelector<HTMLSelectElement>(".reviews__select-service");
         if (serviceSelect === null) {
             throw new Error("Error: Service type select not found.");
         }
@@ -70,6 +70,13 @@ export class ReviewsSectionView implements ReviewsView {
         this.setServicesData(this.#servicesData);
 
         this.#reviewsGrid.setLang(this.#lang);
+
+        const submitReviewBtn = this.#element.querySelector<HTMLButtonElement>(".reviews-section__submit-review-btn");
+        if (submitReviewBtn !== null) {
+            submitReviewBtn.textContent = this.#lang === "ru"
+                ? "Оставить отзыв"
+                : "Submit review";
+        }
     }
 
     setServicesData(data: ServicesData[]): void {

@@ -23,6 +23,8 @@ interface ReviewsGrid {
     filterGalleryData(serviceId?: number): void;
 }
 
+type ButtonClickCallback = (serviceId: number) => void;
+
 export class Detailed {
     #textContentMap: TextContentItem[];
     #element: HTMLElement;
@@ -31,6 +33,12 @@ export class Detailed {
     #reviewsGrid: ReviewsGrid | null = null;
 
     #lang: Language = "ru";
+
+    #currentServiceId = -1;
+
+    #onSubmitApplication: ButtonClickCallback | null = null;
+    #onShowAllPhoto: ButtonClickCallback | null = null;
+    #onShowAllReviews: ButtonClickCallback | null = null;
 
     constructor() {
         this.#textContentMap = textContentMap;
@@ -85,6 +93,8 @@ export class Detailed {
                 </button>
             </div>
         `;
+
+        this.#initButtons();
     }
 
     getElement(): HTMLElement {
@@ -96,6 +106,18 @@ export class Detailed {
         translate(this.#element, this.#textContentMap, this.#lang);
     }
 
+    setOnSubmitApplication(hook: ButtonClickCallback): void {
+        this.#onSubmitApplication = hook;
+    }
+
+    setOnShowAllPhoto(hook: ButtonClickCallback): void {
+        this.#onShowAllPhoto = hook;
+    }
+
+    setOnShowAllReviews(hook: ButtonClickCallback): void {
+        this.#onShowAllReviews = hook;
+    }
+
     setServiceData(data: ServiceData): void {
         const background = this.#element.querySelector<HTMLDivElement>(".main-info__background");
         if (background === null) {
@@ -104,7 +126,7 @@ export class Detailed {
 
         background.style.setProperty(
             "--service-background",
-            `url("${data.background}")`
+            `url("${import.meta.env.BASE_URL}${data.background}")`
         );
 
         const icon = this.#element.querySelector<HTMLImageElement>(".main-info__icon");
@@ -143,6 +165,8 @@ export class Detailed {
         if (this.#reviewsGrid !== null) {
             this.#reviewsGrid.filterGalleryData(data.id);
         }
+
+        this.#currentServiceId = data.id;
     }
 
     setGalleryList(gallery: GalleryList): void {
@@ -174,7 +198,7 @@ export class Detailed {
         if (this.#reviewsGrid !== null) {
             reviewsSection.replaceChild(reviews.getElement(), this.#reviewsGrid.getElement());
         } else {
-            const allReviewsBtn = this.#element.querySelector<HTMLButtonElement>(".all-reviews-btn");
+            const allReviewsBtn = this.#element.querySelector<HTMLElement>(".all-reviews-btn");
             if (allReviewsBtn === null) {
                 throw new Error("Error: Show all reviews button not found.");
             }
@@ -183,5 +207,46 @@ export class Detailed {
         }
 
         this.#reviewsGrid = reviews;
+    }
+
+    #initButtons(): void {
+        const submitAppBtn = this.#element.querySelector<HTMLButtonElement>(".submit-app-btn");
+        if (submitAppBtn === null) {
+            throw new Error("Error: Main section submit app button not found.");
+        }
+
+        submitAppBtn.addEventListener("click", () => {
+            if (this.#onSubmitApplication === null) {
+                throw new Error(`Error: set "onSubmitApplication()" hook first.`);
+            }
+
+            this.#onSubmitApplication?.(this.#currentServiceId);
+         });
+
+        const allPhotoBtn = this.#element.querySelector<HTMLButtonElement>(".all-photo-btn");
+        if (allPhotoBtn === null) {
+            throw new Error("Error: Show all photo button not found.");
+        }
+
+        allPhotoBtn.addEventListener("click", () => {
+            if (this.#onSubmitApplication === null) {
+                throw new Error(`Error: set "onShowAllPhoto()" hook first.`);
+            }
+
+            this.#onShowAllPhoto?.(this.#currentServiceId);
+        });
+
+        const allReviewsBtn = this.#element.querySelector<HTMLButtonElement>(".all-reviews-btn");
+        if (allReviewsBtn === null) {
+            throw new Error("Error: All reviews button not found.");
+        }
+
+        allReviewsBtn.addEventListener("click", () => {
+            if (this.#onSubmitApplication === null) {
+                throw new Error(`Error: set "onShowAllReviews()" hook first.`);
+            }
+
+            this.#onShowAllReviews?.(this.#currentServiceId);
+        });
     }
 }

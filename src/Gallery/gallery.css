@@ -41,7 +41,7 @@
 
     opacity: 0.5;
 
-    transition: 
+    transition:
         opacity 0.2s ease,
         transform 0.2s ease;
 
@@ -117,7 +117,7 @@
     display: flex;
     gap: 1.2rem;
     padding: var(--gallery-list-top-padding) 0 var(--gallery-list-bottom-padding);
-    
+
     overflow-x: auto;
 }
 
@@ -181,8 +181,8 @@
     background: rgb(34 38 34 / 0.55);
     border-radius: 0.6rem;
 
-    backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
 }
 
 /* Gallery section styles */
@@ -200,7 +200,7 @@
 
     display: grid;
     grid-template-columns: minmax(0, 1fr);
-    grid-template-rows: 
+    grid-template-rows:
         auto
         minmax(0, 16fr)
         auto
@@ -220,7 +220,7 @@
 
     cursor: pointer;
 
-    transition: 
+    transition:
         background-color 0.2s ease,
         border-color 0.2s ease;
 

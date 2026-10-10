@@ -1,11 +1,7 @@
 import "./dialog.css";
 
 const SHOW_TYPES = ["slideFromRight", "slideFromBottom", "scaling", "instant"] as const;
-type ShowType = typeof SHOW_TYPES[number];
-
-function isShowType(value: string): value is ShowType {
-    return SHOW_TYPES.some((type) => type === value);
-}
+export type ShowType = typeof SHOW_TYPES[number];
 
 type DialogSection = {
     section: HTMLElement;
@@ -30,12 +26,33 @@ export class Dialog {
     ]);
 
     #sectionsHistory: HTMLElement[] = [];
+    #isTransitioning = false;
 
     constructor() {
         this.#dialog = document.createElement("dialog");
         this.#dialog.classList.add("page__dialog");
 
+        this.#dialog.addEventListener("keydown", (event) => {
+            if (event.key !== "Escape" || event.repeat) {
+                return;
+            }
+
+            event.preventDefault();
+            event.stopImmediatePropagation();
+
+            this.close();
+        }, {
+            capture: true
+        });
+
         this.#dialog.addEventListener("cancel", (event) => {
+            if (
+                event.target !== this.#dialog ||
+                !event.cancelable
+            ) {
+                return;
+            }
+
             event.preventDefault();
             this.close();
         });
@@ -49,11 +66,7 @@ export class Dialog {
         return this.#dialog;
     }
 
-    addSection(section: HTMLElement, showType: string = "instant"): void {
-        if (!isShowType(showType)) {
-            throw new Error(`Error: Show type "${showType}" not found.`);
-        }
-
+    addSection(section: HTMLElement, showType: ShowType = "instant"): void {
         const dialogSection: DialogSection = {
             section, showType
         };
@@ -70,15 +83,21 @@ export class Dialog {
 
     showSection(section: HTMLElement, onShown?: () => void): void {
         if (this.#dialog.classList.contains("page__dialog--opened")) {
+            if (this.#isTransitioning) {
+                return;
+            }
+
             const currentSection = this.#sectionContainer.querySelector("section");
             if (currentSection === null) {
                 return;
             }
 
+            this.#isTransitioning = true;
             this.#sectionsHistory.push(currentSection);
             this.#dialog.classList.remove("page__dialog--opened");
 
             this.#afterContentTransition(() => {
+                this.#isTransitioning = false;
                 this.showSection(section, onShown);
             });
 
@@ -100,6 +119,16 @@ export class Dialog {
         );
 
         if (!this.#dialog.open) {
+            const doc = document.documentElement;
+            const scrollbarWidth = window.innerWidth - doc.clientWidth;
+
+            doc.style.setProperty(
+                "--scrollbar-width",
+                `${scrollbarWidth}px`
+            );
+
+            doc.classList.add("dialog-open");
+
             this.#dialog.showModal();
         }
 
@@ -113,15 +142,38 @@ export class Dialog {
         });
     }
 
-    close = (): void => {
+    close = (event?: Event): void => {
+        if (event !== undefined) {
+            const button = (event.target as HTMLButtonElement)?.closest("button");
+            if (
+                button !== null &&
+                button instanceof HTMLButtonElement &&
+                button.classList.contains("back-btn") &&
+                button.dataset.fullClose !== undefined
+            ) {
+                this.#sectionsHistory = [];
+            }
+        }
+
+        if (!this.#dialog.open || this.#isTransitioning) {
+            return;
+        }
+
+        this.#isTransitioning = true;
         this.#dialog.classList.remove("page__dialog--opened");
 
         this.#afterContentTransition(() => {
             if (this.#sectionsHistory.length === 0) {
                 this.#dialog.close();
+
+                const doc = document.documentElement;
+                doc.classList.remove("dialog-open");
+                doc.style.removeProperty("--scrollbar-width");
             } else {
                 this.showSection(this.#sectionsHistory.pop()!);
             }
+
+            this.#isTransitioning = false;
         });
     }
 

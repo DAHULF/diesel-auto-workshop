@@ -1,9 +1,7 @@
 import { type Language } from "../languages";
-import { type GetReviewsDataHook, type OnReviewClickedHook, type GetServiceNameHook, type ReviewItem, type ReviewsView } from "./reviewsTypes";
+import { renderIcons } from "../icons";
 
-declare const lucide: {
-  createIcons: () => void;
-}
+import { type GetReviewsDataHook, type OnReviewClickedHook, type GetServiceNameHook, type ReviewItem, type ReviewsView } from "./reviewsTypes";
 
 type ReviewsElement = "button" | "div";
 
@@ -27,7 +25,7 @@ export class ReviewsGridView implements ReviewsView {
         const element = document.createElement("div");
         element.classList.add("reviews-grid");
         this.#element = element;
-        
+
         this.#getReviewsData = getReviewsData;
 
         this.#getServiceName = getServiceName;
@@ -51,7 +49,7 @@ export class ReviewsGridView implements ReviewsView {
             const emptyParagraph = document.createElement("p");
             emptyParagraph.classList.add("reviews-grid__empty");
             emptyParagraph.role = "status";
-            emptyParagraph.textContent = 
+            emptyParagraph.textContent =
                 this.#lang === "ru" ? "Отзывы отсутствуют" : "No reviews available";
 
             this.#element.replaceChildren(emptyParagraph);
@@ -60,7 +58,7 @@ export class ReviewsGridView implements ReviewsView {
             if (this.#maxReviews !== "any") {
                 reviewsData = reviewsData.slice(0, this.#maxReviews);
             }
-            
+
             const reviewsButtons = reviewsData.map((item) => {
                 const reviewBtn = document.createElement(this.#reviewsElement);
                 if (reviewBtn instanceof HTMLButtonElement) {
@@ -101,8 +99,8 @@ export class ReviewsGridView implements ReviewsView {
                 metadataDate.textContent = item.date.toLocaleDateString(
                     this.#lang === "ru" ? "ru-RU" : "en-US",
                     {
-                        year: 'numeric', 
-                        month: 'long', 
+                        year: 'numeric',
+                        month: 'long',
                         day: 'numeric'
                     }
                 );
@@ -120,7 +118,7 @@ export class ReviewsGridView implements ReviewsView {
 
             this.#element.replaceChildren(...reviewsButtons);
             this.#element.scrollTo({ top: 0 });
-            lucide?.createIcons?.();
+            renderIcons();
         }
     }
 

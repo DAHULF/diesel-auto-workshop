@@ -1,7 +1,7 @@
 [
     {
         "id": 1,
-        "imageSrc": "Gallery/painting/painting-01-green-front.png",
+        "imageSrc": "Gallery/painting/painting-01-green-front.webp",
         "serviceId": 1,
         "title": {
             "ru": "Покраска переднего крыла и двери в тёмно-зелёный цвет.",
@@ -10,7 +10,7 @@
     },
     {
         "id": 2,
-        "imageSrc": "Gallery/painting/painting-02-burgundy-rear.png",
+        "imageSrc": "Gallery/painting/painting-02-burgundy-rear.webp",
         "serviceId": 1,
         "title": {
             "ru": "Покраска задней двери и заднего крыла в бордовый цвет.",
@@ -19,7 +19,7 @@
     },
     {
         "id": 3,
-        "imageSrc": "Gallery/painting/painting-03-silver-front.png",
+        "imageSrc": "Gallery/painting/painting-03-silver-front.webp",
         "serviceId": 1,
         "title": {
             "ru": "Восстановление серебристой передней части и бампера.",
@@ -28,7 +28,7 @@
     },
     {
         "id": 4,
-        "imageSrc": "Gallery/painting/painting-04-black-hood.png",
+        "imageSrc": "Gallery/painting/painting-04-black-hood.webp",
         "serviceId": 1,
         "title": {
             "ru": "Покраска капота в чёрный цвет с глянцевым покрытием.",
@@ -37,7 +37,7 @@
     },
     {
         "id": 5,
-        "imageSrc": "Gallery/painting/painting-05-blue-side.png",
+        "imageSrc": "Gallery/painting/painting-05-blue-side.webp",
         "serviceId": 1,
         "title": {
             "ru": "Покраска боковых элементов кузова в синий цвет.",
@@ -46,7 +46,7 @@
     },
     {
         "id": 6,
-        "imageSrc": "Gallery/painting/painting-06-white-rear.png",
+        "imageSrc": "Gallery/painting/painting-06-white-rear.webp",
         "serviceId": 1,
         "title": {
             "ru": "Покраска заднего крыла и крышки багажника в жемчужно-белый цвет.",
@@ -55,7 +55,7 @@
     },
     {
         "id": 7,
-        "imageSrc": "Gallery/suspension/suspension-01-front-strut.png",
+        "imageSrc": "Gallery/suspension/suspension-01-front-strut.webp",
         "serviceId": 2,
         "title": {
             "ru": "Замена передней стойки и пружины подвески.",
@@ -64,7 +64,7 @@
     },
     {
         "id": 8,
-        "imageSrc": "Gallery/suspension/suspension-02-control-arm.png",
+        "imageSrc": "Gallery/suspension/suspension-02-control-arm.webp",
         "serviceId": 2,
         "title": {
             "ru": "Замена переднего рычага и шаровой опоры.",
@@ -73,7 +73,7 @@
     },
     {
         "id": 9,
-        "imageSrc": "Gallery/suspension/suspension-03-front-assembly.png",
+        "imageSrc": "Gallery/suspension/suspension-03-front-assembly.webp",
         "serviceId": 2,
         "title": {
             "ru": "Ремонт элементов передней подвески.",
@@ -82,7 +82,7 @@
     },
     {
         "id": 10,
-        "imageSrc": "Gallery/suspension/suspension-04-rear-suspension.png",
+        "imageSrc": "Gallery/suspension/suspension-04-rear-suspension.webp",
         "serviceId": 2,
         "title": {
             "ru": "Замена амортизатора и пружины задней подвески.",
@@ -91,7 +91,7 @@
     },
     {
         "id": 11,
-        "imageSrc": "Gallery/suspension/suspension-05-torque-check.png",
+        "imageSrc": "Gallery/suspension/suspension-05-torque-check.webp",
         "serviceId": 2,
         "title": {
             "ru": "Финальная проверка затяжки креплений передней стойки.",
@@ -100,7 +100,7 @@
     },
     {
         "id": 12,
-        "imageSrc": "Gallery/suspension/suspension-06-car-on-lift.png",
+        "imageSrc": "Gallery/suspension/suspension-06-car-on-lift.webp",
         "serviceId": 2,
         "title": {
             "ru": "Контрольный осмотр подвески после ремонта.",
@@ -109,7 +109,7 @@
     },
     {
         "id": 13,
-        "imageSrc": "Gallery/maintenance/maintenance-01-engine-check.png",
+        "imageSrc": "Gallery/maintenance/maintenance-01-engine-check.webp",
         "serviceId": 3,
         "title": {
             "ru": "Финальная проверка двигателя после технического обслуживания.",
@@ -118,7 +118,7 @@
     },
     {
         "id": 14,
-        "imageSrc": "Gallery/maintenance/maintenance-02-oil-service.png",
+        "imageSrc": "Gallery/maintenance/maintenance-02-oil-service.webp",
         "serviceId": 3,
         "title": {
             "ru": "Проверка масляного фильтра и сливной пробки после замены масла.",
@@ -127,7 +127,7 @@
     },
     {
         "id": 15,
-        "imageSrc": "Gallery/maintenance/maintenance-03-air-filter.png",
+        "imageSrc": "Gallery/maintenance/maintenance-03-air-filter.webp",
         "serviceId": 3,
         "title": {
             "ru": "Установка нового воздушного фильтра двигателя.",
@@ -136,7 +136,7 @@
     },
     {
         "id": 16,
-        "imageSrc": "Gallery/maintenance/maintenance-04-fluid-check.png",
+        "imageSrc": "Gallery/maintenance/maintenance-04-fluid-check.webp",
         "serviceId": 3,
         "title": {
             "ru": "Проверка уровня охлаждающей и тормозной жидкостей.",
@@ -145,7 +145,7 @@
     },
     {
         "id": 17,
-        "imageSrc": "Gallery/maintenance/maintenance-05-brake-check.png",
+        "imageSrc": "Gallery/maintenance/maintenance-05-brake-check.webp",
         "serviceId": 3,
         "title": {
             "ru": "Проверка состояния тормозных колодок и диска.",
@@ -154,7 +154,7 @@
     },
     {
         "id": 18,
-        "imageSrc": "Gallery/maintenance/maintenance-06-service-bay.png",
+        "imageSrc": "Gallery/maintenance/maintenance-06-service-bay.webp",
         "serviceId": 3,
         "title": {
             "ru": "Завершённое плановое техническое обслуживание автомобиля.",

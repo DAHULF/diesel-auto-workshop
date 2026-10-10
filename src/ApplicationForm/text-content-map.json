@@ -1,0 +1,75 @@
+[
+    {
+        "element": ".back-btn span",
+        "ru-lang": "Назад",
+        "en-lang": "Back"
+    },
+    {
+        "element": ".app-form__title",
+        "ru-lang": "Заявка на консультацию",
+        "en-lang": "Request for a consultation"
+    },
+    {
+        "element": ".app-form__item:has(.form-item__service-type) span",
+        "ru-lang": "Услуга",
+        "en-lang": "Service"
+    },
+    {
+        "element": ".app-form__item:has(.form-item__date) span",
+        "ru-lang": "Предпочтительная дата",
+        "en-lang": "Preferred date"
+    },
+    {
+        "element": ".form-item__date",
+        "attribute": "lang",
+        "ru-lang": "ru",
+        "en-lang": "en"
+    },
+    {
+        "element": ".app-form__item:has(.form-item__time) span",
+        "ru-lang": "Предпочтительное время",
+        "en-lang": "Preferred time"
+    },
+    {
+        "element": ".form-item__time",
+        "attribute": "lang",
+        "ru-lang": "ru",
+        "en-lang": "en"
+    },
+    {
+        "element": ".app-form__item:has(.form-item__brief-description) span",
+        "ru-lang": "Кратко опишите проблему",
+        "en-lang": "Briefly describe the problem"
+    },
+    {
+        "element": ".form-item__brief-description",
+        "attribute": "placeholder",
+        "ru-lang": "Краткое описание вашей проблемы",
+        "en-lang": "A brief description of your problemen"
+    },
+    {
+        "element": ".app-form__item:has(.form-item__phone) span",
+        "ru-lang": "Номер телефона",
+        "en-lang": "Phone number"
+    },
+    {
+        "element": ".app-form__item:has(.form-item__email) span",
+        "ru-lang": "Адрес электронной почты",
+        "en-lang": "Email address"
+    },
+    {
+        "element": ".app-form__item:has(.form-item__save-contact) span",
+        "ru-lang": "Запомнить контактные данные",
+        "en-lang": "Save contact details"
+    },
+    {
+        "element": ".app-form__info",
+        "ru-lang": "Выбираемые дата и время являются предварительными. После оставления заявки мастер свяжется с вами и согласует точное время.",
+        "en-lang": "The selected date and time are tentative. After you submit your request, the technician will contact you to confirm the exact time."
+    },
+    {
+        "element": ".app-form__submit span",
+        "ru-lang": "Оставить заявку",
+        "en-lang": "Submit application"
+    }
+]
